@@ -1,0 +1,63 @@
+<% include ../partials/head %>
+
+<aside id="sidebar" class="container-fluid position-fixed">
+    <div class="row">
+        <div class="col-2 bg-danger">
+            <ul class="text-white">
+                <li>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maiores officia delectus ullam aut consequatur
+                    soluta quis quo veniam voluptatum, culpa sequi reiciendis nemo, voluptatem, numquam fuga eos assumenda
+                    sapiente odio?</li>
+                <li>Inventore doloribus a dolores recusandae itaque, illum ducimus incidunt accusantium assumenda quod vero,
+                    optio laborum, placeat hic sequi. Iure officia, vero optio repudiandae ipsam quisquam eos vitae consectetur
+                    corrupti odit?</li>
+                <li>Expedita sequi excepturi harum praesentium odit inventore quae libero iure. Laboriosam obcaecati rerum
+                    ducimus quibusdam repellat corporis a maiores fugit commodi ipsam. Repudiandae nostrum perspiciatis repellat
+                    neque doloribus deleniti quae.</li>
+                <li>Quas perspiciatis enim hic similique doloribus distinctio dolorum iste modi, itaque mollitia quibusdam atque
+                    molestiae eveniet, sit et quia assumenda soluta exercitationem iusto laborum in. Deleniti, quod praesentium?
+                    Eligendi, esse!</li>
+                <li>Doloribus unde numquam consequatur dolores nam nulla harum nemo nisi obcaecati vel repudiandae possimus,
+                    ratione enim animi quasi laudantium natus non quis illum nihil. Sit praesentium qui doloribus enim ad?</li>
+            </ul>
+        </div>
+    </div>
+</aside>
+
+<section id="index-campgrounds">
+    <div class="container mt-5 all-campgrounds-container">
+        <div class="row">
+
+            <% for (const book of books){ %>
+            <div class="col-md-12 mb-4">
+                <div class="card">
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3">
+                                <a href="#"><img src="<%= book.volumeInfo.imageLinks.thumbnail %>" class="w-100"
+                                        alt="<%= book.volumeInfo.title %> image."></a>
+                            </div>
+                            <div class="col-9">
+                                <h5 class="card-title"><%= book.volumeInfo.title %></h5>
+                                <p class="card-text">
+                                    <% if(book.volumeInfo.authors) { %>
+                                        <% for(const author of book.volumeInfo.authors){ %>
+                                            | <%= author %>
+                                        <% } %>
+                                    <% } %>
+                                </p>
+                                <% if(book.volumeInfo.description) { %>
+                                    <p class="card-text"><%= book.volumeInfo.description.substring(0,250) %>...</p>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+</section>
+
+<% include ../partials/foot %>

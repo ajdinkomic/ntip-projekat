@@ -1,0 +1,37 @@
+<% include ./partials/head %>
+<% include ./partials/navigation %>
+
+<main>
+
+  <!-- Landing header -->
+  <header id="landing-header">
+    <div class="container-fluid">
+      <div class="row justify-content-center align-items-center m-0 text-center">
+        <div class="col-md-12">
+
+          <h1 class="mb-4">Online Biblioteka</h1>
+          <p class="mb-5">Pretražite svoje <span class="featured">omiljene knjige</span> po nazivu:
+          </p>
+
+          <!-- Pretraga -->
+          <form action="/books" method="GET">
+            <div class="input-group m-auto">
+              <input type="text" class="form-control pl-3" name="search" placeholder="Pretraga..." aria-label="Pretraga"
+                aria-describedby="search-icon">
+              <div class="input-group-append">
+                <span class="input-group-text py-0 px-3" id="search-icon">
+                  <button type="submit" class="btn p-0">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </span>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+  </header>
+
+</main>
+
+<% include ./partials/foot %>
