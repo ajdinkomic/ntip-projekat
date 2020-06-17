@@ -13,5 +13,16 @@ $(function () {
     $(this).css('border-color', '#fff');
     $('.input-group .input-group-append .input-group-text').css('border-color', '#fff');
   });
+
+
+  // Promjena pozicije forme za pretragu na stranici books/index
+  $(window).scroll(function () {
+    let form = $('.top-bar-form');
+    if ($(this).scrollTop() < 70) {
+        form.css('top', '-5rem');
+    } else {
+        form.css('top', '0');
+    }
+});
   
 });

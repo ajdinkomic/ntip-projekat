@@ -1,30 +1,51 @@
 <% include ../partials/head %>
 
-<aside id="sidebar" class="container-fluid position-fixed">
-    <div class="row">
-        <div class="col-2 bg-danger">
-            <ul class="text-white">
-                <li>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maiores officia delectus ullam aut consequatur
-                    soluta quis quo veniam voluptatum, culpa sequi reiciendis nemo, voluptatem, numquam fuga eos assumenda
-                    sapiente odio?</li>
-                <li>Inventore doloribus a dolores recusandae itaque, illum ducimus incidunt accusantium assumenda quod vero,
-                    optio laborum, placeat hic sequi. Iure officia, vero optio repudiandae ipsam quisquam eos vitae consectetur
-                    corrupti odit?</li>
-                <li>Expedita sequi excepturi harum praesentium odit inventore quae libero iure. Laboriosam obcaecati rerum
-                    ducimus quibusdam repellat corporis a maiores fugit commodi ipsam. Repudiandae nostrum perspiciatis repellat
-                    neque doloribus deleniti quae.</li>
-                <li>Quas perspiciatis enim hic similique doloribus distinctio dolorum iste modi, itaque mollitia quibusdam atque
-                    molestiae eveniet, sit et quia assumenda soluta exercitationem iusto laborum in. Deleniti, quod praesentium?
-                    Eligendi, esse!</li>
-                <li>Doloribus unde numquam consequatur dolores nam nulla harum nemo nisi obcaecati vel repudiandae possimus,
-                    ratione enim animi quasi laudantium natus non quis illum nihil. Sit praesentium qui doloribus enim ad?</li>
-            </ul>
-        </div>
-    </div>
+<aside id="sidebar">
+    <ul class="text-white text-center pt-1">
+        <li class="mt-2">
+            <p><em>NTIP</em></p>
+        </li>
+        <li class="mt-2"><i class="fas fa-heart"></i></li>
+        <li class="mt-2"><i class="fas fa-poll"></i></li>
+        <li class="mt-2"><i class="fas fa-cog"></i></li>
+    </ul>
 </aside>
 
-<section id="index-campgrounds">
-    <div class="container mt-5 all-campgrounds-container">
+<!-- Pretraga -->
+<form action="/books" method="GET" class="top-bar-form">
+    <div class="input-group">
+        <input type="text" class="form-control pl-3" name="search" placeholder="Pretraga..." aria-label="Pretraga"
+            aria-describedby="search-icon">
+        <div class="input-group-append">
+            <span class="input-group-text py-0 px-3" id="search-icon">
+                <button type="submit" class="btn p-0">
+                    <i class="fas fa-search"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+</form>
+
+<section id="index-books">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Pretraga -->
+                <form action="/books" method="GET">
+                    <div class="input-group mb-5">
+                        <input type="text" class="form-control pl-3" name="search" placeholder="Pretraga..."
+                            aria-label="Pretraga" aria-describedby="search-icon">
+                        <div class="input-group-append">
+                            <span class="input-group-text py-0 px-3" id="search-icon">
+                                <button type="submit" class="btn p-0">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="row">
 
             <% for (const book of books){ %>
@@ -33,22 +54,70 @@
 
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-3">
-                                <a href="#"><img src="<%= book.volumeInfo.imageLinks.thumbnail %>" class="w-100"
+                            <div class="col-3 text-center align-self-sm-center">
+                                <a href="#"><img src="<%= book.volumeInfo.imageLinks.thumbnail %>" class="img-fluid"
                                         alt="<%= book.volumeInfo.title %> image."></a>
                             </div>
                             <div class="col-9">
                                 <h5 class="card-title"><%= book.volumeInfo.title %></h5>
                                 <p class="card-text">
                                     <% if(book.volumeInfo.authors) { %>
-                                        <% for(const author of book.volumeInfo.authors){ %>
-                                            | <%= author %>
-                                        <% } %>
+                                    <% for(const author of book.volumeInfo.authors){ %>
+                                    | <%= author %>
+                                    <% } %>
+                                    <% } %>
+                                </p>
+                                <p class="card-text">
+                                    <% if(book.volumeInfo.categories) { %>
+                                    <% for(const category of book.volumeInfo.categories){ %>
+                                    <em><%= category %></em>
+                                    <% } %>
                                     <% } %>
                                 </p>
                                 <% if(book.volumeInfo.description) { %>
-                                    <p class="card-text"><%= book.volumeInfo.description.substring(0,250) %>...</p>
+                                <p class="card-text"><%= book.volumeInfo.description.substring(0,250) %>...</p>
                                 <% } %>
+
+                                <a href="#" class="btn read-more-btn">Pročitaj Više</a>
+
+                                <!-- Button trigger modal -->
+                                <!-- <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#exampleModalCenter">
+                                    Launch demo modal
+                                </button> -->
+
+                                <!-- Modal -->
+                                <!-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 100%;">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="viewerCanvas" style="width: 100%; height: 700px"></div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+
+
+
+                                <!-- <a href="#" class="btn btn-primary btn-read-more" title="Pročitaj Više"><i
+                                        class="fa fa-info"></i></a>
+                                <a href="#" class="btn btn-success btn-quick-view" title="Brzi pregled"><i
+                                        class="fa fa-eye"></i></a> -->
+
+
                             </div>
                         </div>
                     </div>
@@ -60,4 +129,34 @@
     </div>
 </section>
 
+<script type="text/javascript" src="https://www.google.com/books/jsapi.js"></script>
+<script type="text/javascript">
+    google.books.load();
+
+    function initialize() {
+        var viewer = new google.books.DefaultViewer(document.getElementById('viewerCanvas'));
+        viewer.load('VcV7AwAAQBAJ');
+    }
+
+    google.books.setOnLoadCallback(initialize);
+</script>
+
 <% include ../partials/foot %>
+
+
+
+<!-- <!DOCTYPE html "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Google Books Embedded Viewer API Example</title>
+    <script type="text/javascript" src="//books.google.com/books/previewlib.js"></script>
+<script type="text/javascript">
+GBS_insertEmbeddedViewer('6aNwCgAAQBAJ',600,500);
+</script>
+  </head>
+  <body>
+    <div id="viewerCanvas" style="width: 1920px; height: 1080px"></div>
+  </body>
+</html> -->

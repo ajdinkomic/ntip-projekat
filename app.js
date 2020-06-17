@@ -83,5 +83,5 @@ app.use("/books", bookRoutes);
 const port = process.env.PORT;
 const ip = process.env.IP;
 app.listen(port, ip, function () {
-    console.log("Online Library Server Pokrenut!");
+    console.log("Online Biblioteka Server Pokrenut!");
 });
