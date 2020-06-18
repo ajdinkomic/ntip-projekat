@@ -248,6 +248,18 @@ h6 {
 	background-color: var(--landing-overlay-color);
 }
 
+.profile-image {
+	width: 3rem;
+	height: 3rem;
+	object-fit: cover;
+	border-radius: 100%;
+	box-shadow: var(--card-box-shadow);
+}
+
+.profile-name {
+	word-break: break-word;
+}
+
 /*************************************************
               BOOKS - INDEX
 *************************************************/
@@ -329,7 +341,7 @@ h6 {
 }
 
 .read-more-btn {
-	background: #0e4e3f;
+	background: #1e5e4f;
 	color: #fff;
 	font-size: var(--font-14);
 	transition: all 0.4s ease;

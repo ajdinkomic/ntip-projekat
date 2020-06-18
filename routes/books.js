@@ -1,62 +1,62 @@
-const express = require("express"),
-    router = express.Router(),
-    // Campground = require("../models/campground"),
-    // User = require("../models/user"),
-    // Notification = require("../models/notification"),
-    multer = require("multer"),
-    fetch = require("node-fetch"),
-    cloudinary = require("cloudinary").v2,
-    nodeGeocoder = require("node-geocoder");
+const express = require('express'),
+	router = express.Router(),
+	// Campground = require("../models/campground"),
+	// User = require("../models/user"),
+	// Notification = require("../models/notification"),
+	multer = require('multer'),
+	fetch = require('node-fetch'),
+	cloudinary = require('cloudinary').v2,
+	nodeGeocoder = require('node-geocoder');
 
-const {
-    isLoggedIn,
-    checkCampgroundOwnership
-} = require("../middleware"); // if we require folder it requires automatically file named index.js 
+const { isLoggedIn, checkCampgroundOwnership } = require('../middleware'); // if we require folder it requires automatically file named index.js
 
 // multer config
 const storage = multer.diskStorage({
-    filename: (req, file, callback) => {
-        callback(null, Date.now() + file.originalname);
-    }
+	filename: (req, file, callback) => {
+		callback(null, Date.now() + file.originalname);
+	}
 });
 const imageFilter = (req, file, cb) => {
-    // only accept images
-    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
-        return cb(new Error("Only image files are allowed!"), false);
-    }
-    cb(null, true);
-}
+	// only accept images
+	if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+		return cb(new Error('Only image files are allowed!'), false);
+	}
+	cb(null, true);
+};
 const upload = multer({
-    storage: storage,
-    fileFilter: imageFilter
+	storage: storage,
+	fileFilter: imageFilter
 });
 
 // cloudinary config
 cloudinary.config({
-    cloud_name: "ajdinkomiccloud",
-    api_key: process.env.CLOUDINARY_API,
-    api_secret: process.env.CLOUDINARY_SECRET
+	cloud_name: 'ajdinkomiccloud',
+	api_key: process.env.CLOUDINARY_API,
+	api_secret: process.env.CLOUDINARY_SECRET
 });
 
 // google maps geocoder config
 const options = {
-        provider: 'google',
-        httpAdapter: 'https',
-        apiKey: process.env.GEOCODER_API,
-        formatter: null
-    },
-    geocoder = nodeGeocoder(options);
+		provider: 'google',
+		httpAdapter: 'https',
+		apiKey: process.env.GEOCODER_API,
+		formatter: null
+	},
+	geocoder = nodeGeocoder(options);
 
 // INDEX - show all campgrounds
-router.get("/", (req, res) => {
+router.get('/', (req, res) => {
+	let searchTerm = req.query.search;
+	console.log(searchTerm);
 
-    let searchTerm = req.query.search;
-    console.log(searchTerm);
-
-    fetch(`https://www.googleapis.com/books/v1/volumes?q=%22%22+intitle:${searchTerm}`)
-    .then(res => res.json())
-    .then(books => {console.log(books.items); res.render('campgrounds/index', {books: books.items});});
-
+	fetch(
+		`https://www.googleapis.com/books/v1/volumes?q=%22%22+intitle:${searchTerm}`
+	)
+		.then(res => res.json())
+		.then(books => {
+			console.log(books.items);
+			res.render('campgrounds/index', { books: books.items });
+		});
 });
 
 // CREATE - add new campground to DB
