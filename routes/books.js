@@ -44,109 +44,29 @@ const options = {
 	},
 	geocoder = nodeGeocoder(options);
 
-// INDEX - show all campgrounds
+// INDEX - prikazi sve knjige
 router.get('/', (req, res) => {
 	let searchTerm = req.query.search;
-	console.log(searchTerm);
-
 	fetch(
 		`https://www.googleapis.com/books/v1/volumes?q=%22%22+intitle:${searchTerm}`
 	)
 		.then(res => res.json())
 		.then(books => {
 			console.log(books.items);
-			res.render('campgrounds/index', { books: books.items });
+			res.render('books/index', { books: books.items });
 		});
 });
 
-// CREATE - add new campground to DB
-// router.post("/", isLoggedIn, upload.single("image"), async (req, res) => {
-
-//     try {
-//         let data = await geocoder.geocode(req.body.location);
-//         if (!data || data.length === 0) {
-//             throw new Error("Invalid address!");
-//         } else {
-
-//             let result = await cloudinary.uploader.upload(req.file.path);
-
-//             // get data from form and add to campgrounds array
-//             const name = req.body.name,
-//                 image = result.secure_url,
-//                 imageId = result.public_id,
-//                 desc = req.body.description,
-//                 price = req.body.price,
-//                 author = {
-//                     id: req.user._id,
-//                     username: req.user.username
-//                 },
-//                 lat = data[0].latitude,
-//                 lng = data[0].longitude,
-//                 location = data[0].formattedAddress,
-//                 newCampground = {
-//                     name: name,
-//                     price: price,
-//                     image: image,
-//                     imageId: imageId,
-//                     description: desc,
-//                     author: author,
-//                     location: location,
-//                     lat: lat,
-//                     lng: lng
-//                 };
-
-//             let campground = await Campground.create(newCampground);
-//             let user = await User.findById(req.user._id).populate("followers").exec();
-//             let newNotification = {
-//                 username: req.user.username,
-//                 campgroundSlug: campground.slug
-//             }
-//             for (const follower of user.followers) {
-//                 let notification = await Notification.create(newNotification);
-//                 follower.notifications.push(notification);
-//                 follower.save();
-//             }
-//             req.flash("success", "Thank you for submitting your campground!");
-//             res.redirect(`/campgrounds/${campground.slug}`);
-
-//         }
-
-//     } catch (err) {
-//         req.flash("error", err.message);
-//         return res.redirect("back");
-//     }
-// });
-
-// // NEW - show form to create new campground
-// router.get("/new", isLoggedIn, (req, res) => {
-//     res.render("campgrounds/new");
-// });
-
-// // this has to be declared last because it is /campgrounds/anything, so it could be /campgrounds/new and we don't want that
-// // SHOW - info about one specific campground
-// router.get("/:slug", (req, res) => {
-//     //find campground with provided slug
-//     Campground.findOne({
-//         slug: req.params.slug
-//     }).populate({
-//         path: "reviews",
-//         options: {
-//             sort: {
-//                 createdAt: -1
-//             }
-//         }
-//     }).exec((err, foundCampground) => {
-//         if (err || !foundCampground) {
-//             req.flash("error", "Campground not found!");
-//             res.redirect("/campgrounds");
-//         } else {
-//             //render show template with that campground
-//             res.render("campgrounds/show", {
-//                 campground: foundCampground
-//             });
-//         }
-//     });
-// });
+// SHOW - informacije o pojedinačnim knjigama
+router.get('/:id', (req, res) => {
+	//pronadji knjigu s tim ID-em
+	let bookId = req.params.id;
+	fetch(`https://www.googleapis.com/books/v1/volumes/${bookId}`)
+		.then(res => res.json())
+		.then(book => {
+			res.render('books/show', { book });
+		});
+});
 
 // // EDIT CAMPGROUND ROUTE
 // router.get("/:slug/edit", isLoggedIn, checkCampgroundOwnership, (req, res) => {

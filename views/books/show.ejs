@@ -1,0 +1,86 @@
+<% include ../partials/head %> <% include ../partials/sidebar %>
+
+<!-- Pretraga -->
+<form action="/books" method="GET" class="top-bar-form">
+	<div class="input-group">
+		<input
+			type="text"
+			class="form-control pl-3"
+			name="search"
+			placeholder="Pretraga..."
+			aria-label="Pretraga"
+			aria-describedby="search-icon"
+		/>
+		<div class="input-group-append">
+			<span class="input-group-text py-0 px-3" id="search-icon">
+				<button type="submit" class="btn p-0">
+					<i class="fas fa-search"></i>
+				</button>
+			</span>
+		</div>
+	</div>
+</form>
+
+<main>
+	<section
+		id="book-show"
+		style="background: url(<%=book.volumeInfo.imageLinks.thumbnail%>);"
+	>
+		<div class="container pt-5">
+			<div class="row">
+				<div class="col-md-12 mb-4">
+					<div class="card px-5 py-4">
+						<div class="card-body">
+							<h5 class="card-title">
+								<%= book.volumeInfo.title %>
+							</h5>
+
+							<p class="card-text mt-3">
+								<strong>Podnaslov:</strong> <br />
+								<em><%= book.volumeInfo.subtitle %></em> <br />
+							</p>
+							<p class="card-text">
+								<% if(book.volumeInfo.authors) { %> <strong>Autor/i:</strong>
+								<br /><% for(const author of book.volumeInfo.authors){ %>
+								<em><%= author %></em>
+								<br />
+								<% } %> <% } %>
+							</p>
+							<p class="card-text">
+								<strong>Datum objavljivanja:</strong> <br />
+								<em><%= book.volumeInfo.publishedDate %></em> <br />
+							</p>
+							<p class="card-text">
+								<% if(book.volumeInfo.categories) { %>
+								<strong>Kategorije:</strong> <br /><% for(const category of
+								book.volumeInfo.categories){ %> <em><%= category %></em> <br />
+								<% } %> <% } %>
+							</p>
+							<% if(book.volumeInfo.description) { %>
+							<p class="card-text">
+								<strong>Opis:</strong>
+								<em><%- book.volumeInfo.description %></em>
+							</p>
+							<% } %>
+
+							<a
+								href="<%= book.volumeInfo.previewLink %>"
+								class="btn btn-block read-more-btn read-more-book-show-btn mt-5"
+								target="_blank"
+								>Otvori Google Knjige</a
+							>
+
+							<a
+								href="#"
+								class="btn btn-block add-to-favorites-book-show-btn mt-2"
+								>Dodaj u favorite</a
+							>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</main>
+
+<% include ../partials/foot %>
