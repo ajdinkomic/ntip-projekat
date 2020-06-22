@@ -35,28 +35,31 @@
 								<%= book.volumeInfo.title %>
 							</h5>
 
+							<% if(book.volumeInfo.subtitle) { %>
 							<p class="card-text mt-3">
 								<strong>Podnaslov:</strong> <br />
 								<em><%= book.volumeInfo.subtitle %></em> <br />
 							</p>
+							<% } %> <% if(book.volumeInfo.authors) { %>
 							<p class="card-text">
-								<% if(book.volumeInfo.authors) { %> <strong>Autor/i:</strong>
+								<strong>Autor/i:</strong>
 								<br /><% for(const author of book.volumeInfo.authors){ %>
 								<em><%= author %></em>
 								<br />
-								<% } %> <% } %>
+								<% } %>
 							</p>
+							<% } %> <% if(book.volumeInfo.publishedDate) { %>
 							<p class="card-text">
 								<strong>Datum objavljivanja:</strong> <br />
 								<em><%= book.volumeInfo.publishedDate %></em> <br />
 							</p>
+							<% } %> <% if(book.volumeInfo.categories) { %>
 							<p class="card-text">
-								<% if(book.volumeInfo.categories) { %>
 								<strong>Kategorije:</strong> <br /><% for(const category of
 								book.volumeInfo.categories){ %> <em><%= category %></em> <br />
-								<% } %> <% } %>
+								<% } %>
 							</p>
-							<% if(book.volumeInfo.description) { %>
+							<% } %> <% if(book.volumeInfo.description) { %>
 							<p class="card-text">
 								<strong>Opis:</strong>
 								<em><%- book.volumeInfo.description %></em>
