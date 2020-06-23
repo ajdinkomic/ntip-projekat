@@ -42,6 +42,21 @@
 							<div class="row">
 								<div class="col-3 text-center align-self-sm-center">
 									<a href="books/<%= book.id %>"><img src="<%= book.volumeInfo.imageLinks.thumbnail %>" class="img-fluid" alt="<%= book.volumeInfo.title %> image." /></a>
+									<% if(book.volumeInfo.averageRating) { %>
+									<p class="card-text mt-3">
+										<strong>Google Books ocjena:</strong>
+										<br />
+										<span title="<%= book.volumeInfo.averageRating %> / 5">
+											<span class="fas fa-star checked-star"></span>
+											<span class="fas fa-star <% if (book.volumeInfo.averageRating >= 1.5) { %> checked-star <% } %>"></span>
+											<span class="fas fa-star <% if (book.volumeInfo.averageRating >= 2.5) { %> checked-star <% } %>"></span>
+											<span class="fas fa-star <% if (book.volumeInfo.averageRating >= 3.5) { %> checked-star <% } %>"></span>
+											<span class="fas fa-star <% if (book.volumeInfo.averageRating >= 4.5) { %> checked-star <% } %>"></span>
+										</span>
+										<em>(<%= book.volumeInfo.ratingsCount %>)</em>
+										<br />
+									</p>
+									<% } %>
 								</div>
 								<div class="col-9">
 									<div class="row align-items-center">

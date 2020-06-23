@@ -25,7 +25,21 @@
 								<%= book.volumeInfo.title %>
 							</h5>
 
-							<% if(book.volumeInfo.subtitle) { %>
+							<% if(book.volumeInfo.averageRating) { %>
+							<p class="card-text mt-3">
+								<strong>Google Books ocjena:</strong>
+								<br />
+								<span title="<%= book.volumeInfo.averageRating %> / 5">
+									<span class="fas fa-star checked-star"></span>
+									<span class="fas fa-star <% if (book.volumeInfo.averageRating >= 1.5) { %> checked-star <% } %>"></span>
+									<span class="fas fa-star <% if (book.volumeInfo.averageRating >= 2.5) { %> checked-star <% } %>"></span>
+									<span class="fas fa-star <% if (book.volumeInfo.averageRating >= 3.5) { %> checked-star <% } %>"></span>
+									<span class="fas fa-star <% if (book.volumeInfo.averageRating >= 4.5) { %> checked-star <% } %>"></span>
+								</span>
+								<em>(<%= book.volumeInfo.ratingsCount %>)</em>
+								<br />
+							</p>
+							<% } %> <% if(book.volumeInfo.subtitle) { %>
 							<p class="card-text mt-3">
 								<strong>Podnaslov:</strong>
 								<br />
