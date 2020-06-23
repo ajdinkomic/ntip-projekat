@@ -47,9 +47,7 @@ const options = {
 // INDEX - prikazi sve knjige
 router.get('/', (req, res) => {
 	let searchTerm = req.query.search;
-	fetch(
-		`https://www.googleapis.com/books/v1/volumes?q=%22%22+intitle:${searchTerm}`
-	)
+	fetch(`https://www.googleapis.com/books/v1/volumes?q=%22%22+intitle:${searchTerm}`)
 		.then(res => res.json())
 		.then(books => {
 			console.log(books.items);

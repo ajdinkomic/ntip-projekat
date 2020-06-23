@@ -1,23 +1,23 @@
 // configure dotenv package
-const dotenv = require("dotenv");
+const dotenv = require('dotenv');
 dotenv.config();
 
-const express = require("express"),
-    app = express(),
-    bodyParser = require("body-parser"),
-    mongoose = require("mongoose"),
-    // flash = require("connect-flash"),
-    // passport = require("passport"),
-    // LocalStrategy = require("passport-local"),
-    methodOverride = require("method-override");
-    // User = require("./models/user"),
-    // Campground = require("./models/campground");
+const express = require('express'),
+	app = express(),
+	bodyParser = require('body-parser'),
+	mongoose = require('mongoose'),
+	// flash = require("connect-flash"),
+	// passport = require("passport"),
+	// LocalStrategy = require("passport-local"),
+	methodOverride = require('method-override');
+// User = require("./models/user"),
+// Campground = require("./models/campground");
 
 // Require routes
 // const campgroundRoutes = require("./routes/campgrounds");
-const bookRoutes = require("./routes/books");
+const bookRoutes = require('./routes/books');
 //     reviewRoutes = require("./routes/reviews"),
-    const indexRoutes = require("./routes/index"); // auth routes
+const indexRoutes = require('./routes/index'); // auth routes
 
 // FLASH MESSAGES - should come before passport
 // app.use(flash());
@@ -38,50 +38,52 @@ const bookRoutes = require("./routes/books");
 // passport.deserializeUser(User.deserializeUser());
 // make our req.user or currentUser accessible on all routes and views
 // app.use(async (req, res, next) => {
-    // res.locals.currentUser = req.user;
-    // if (req.user) {
-    //     try {
-    //         let user = await User.findById(req.user._id).populate("notifications", null, {
-    //             isRead: false
-    //         }, null, {
-    //             sort: {
-    //                 "_id": -1
-    //             }
-    //         }).populate("favorites").exec();
-    //         let favoriteCamps = await Campground.find({"_id": user.favorites});
-    //         res.locals.unreadNotifications = user.notifications;
-    //         res.locals.favoriteCamps = favoriteCamps;
-    //     } catch (err) {
-    //         console.log(err.message);
-    //     }
-    // }
-    // res.locals.errorMessage = req.flash("error");
-    // res.locals.successMessage = req.flash("success");
-    // next(); // IMPORTANT!!! it will stop without this
+// res.locals.currentUser = req.user;
+// if (req.user) {
+//     try {
+//         let user = await User.findById(req.user._id).populate("notifications", null, {
+//             isRead: false
+//         }, null, {
+//             sort: {
+//                 "_id": -1
+//             }
+//         }).populate("favorites").exec();
+//         let favoriteCamps = await Campground.find({"_id": user.favorites});
+//         res.locals.unreadNotifications = user.notifications;
+//         res.locals.favoriteCamps = favoriteCamps;
+//     } catch (err) {
+//         console.log(err.message);
+//     }
+// }
+// res.locals.errorMessage = req.flash("error");
+// res.locals.successMessage = req.flash("success");
+// next(); // IMPORTANT!!! it will stop without this
 // });
 
-// connect to mongodb 
-mongoose.set("useNewUrlParser", true);
-mongoose.set("useFindAndModify", false);
-mongoose.set("useCreateIndex", true);
-mongoose.set("useUnifiedTopology", true);
-const url = process.env.DATABASEURL || "mongodb://localhost:27017/ntip";
+// connect to mongodb
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
+const url = process.env.DATABASEURL || 'mongodb://localhost:27017/ntip';
 mongoose.connect(url);
 
-app.set("view engine", "ejs");
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-app.use(express.static(__dirname + "/public"));
-app.use(methodOverride("_method"));
+app.set('view engine', 'ejs');
+app.use(
+	bodyParser.urlencoded({
+		extended: true
+	})
+);
+app.use(express.static(__dirname + '/public'));
+app.use(methodOverride('_method'));
 
-app.use("/", indexRoutes);
+app.use('/', indexRoutes);
 // app.use("/campgrounds/:slug/reviews", reviewRoutes);
 // app.use("/campgrounds", campgroundRoutes);
-app.use("/books", bookRoutes);
+app.use('/books', bookRoutes);
 
 const port = process.env.PORT;
 const ip = process.env.IP;
 app.listen(port, ip, function () {
-    console.log("Online Biblioteka Server Pokrenut!");
+	console.log('Online Biblioteka Server Pokrenut!');
 });

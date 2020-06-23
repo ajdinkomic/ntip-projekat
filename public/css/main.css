@@ -6,13 +6,7 @@
 
 	--main-color: #646464;
 	--landing-overlay-color: rgba(0, 0, 0, 0.55);
-	--landing-gradient: linear-gradient(
-		-45deg,
-		#ee7752,
-		#e73c7e,
-		#23a6d5,
-		#23d5ab
-	);
+	--landing-gradient: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
 
 	--nav-box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 	--card-box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
