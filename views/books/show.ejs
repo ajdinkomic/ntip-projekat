@@ -60,7 +60,7 @@
 							<p class="card-text">
 								<strong>Datum objavljivanja:</strong>
 								<br />
-								<em><%= book.volumeInfo.publishedDate %></em>
+								<em><%= book.volumeInfo.publishedDate.split('-').reverse().join('.'); %></em>
 								<br />
 							</p>
 							<% } %> <% if(book.volumeInfo.categories) { %>

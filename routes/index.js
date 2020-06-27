@@ -1,17 +1,16 @@
-const express = require("express"),
-    router = express.Router(),
-    // passport = require("passport"),
-    // User = require("../models/user"),
-    // Campground = require("../models/campground"),
-    // Notification = require("../models/notification"),
-    // Review = require("../models/review"),
-    async = require("async");
-        // multer = require("multer"),
-        // cloudinary = require("cloudinary").v2,
-        // nodemailer = require("nodemailer"),
-        // crypto = require("crypto"), {
-        //     isLoggedIn
-        // } = require("../middleware");
+const express = require('express'),
+	router = express.Router(),
+	passport = require('passport'),
+	// User = require('../models/user'),
+	// Campground = require("../models/campground"),
+	// Notification = require("../models/notification"),
+	// Review = require("../models/review"),
+	async = require('async'),
+	// multer = require("multer"),
+	// cloudinary = require("cloudinary").v2,
+	// nodemailer = require("nodemailer"),
+	// crypto = require("crypto"),
+	{ isLoggedIn } = require('../middleware');
 
 // // multer config
 // const storage = multer.diskStorage({
@@ -39,28 +38,28 @@ const express = require("express"),
 // });
 
 // LANDING PAGE
-router.get("/", async (req, res) => {
-    try {
-        // let campCount = await Campground.estimatedDocumentCount();
-        // let userCount = await User.estimatedDocumentCount();
-        // let reviewCount = await Review.estimatedDocumentCount();
-        res.render("landing");
-    } catch (err) {
-        // req.flash("error", "Landing page could not be loaded properly!");
-        res.redirect("back");
-    }
+router.get('/', async (req, res) => {
+	try {
+		// let campCount = await Campground.estimatedDocumentCount();
+		// let userCount = await User.estimatedDocumentCount();
+		// let reviewCount = await Review.estimatedDocumentCount();
+		res.render('landing');
+	} catch (err) {
+		// req.flash("error", "Landing page could not be loaded properly!");
+		res.redirect('back');
+	}
 });
 
 //================================================
 //          AUTH ROUTES
 //================================================
 
-// // show register form
-// router.get("/register", (req, res) => {
-//     res.render("register", {
-//         page: "register"
-//     });
-// });
+// show register form
+router.get('/register', (req, res) => {
+	res.render('register', {
+		page: 'register'
+	});
+});
 
 // //handle sign up logic
 // router.post("/register", upload.single("image"), async (req, res) => {
@@ -101,12 +100,12 @@ router.get("/", async (req, res) => {
 //     });
 // });
 
-// // show login form
-// router.get("/login", (req, res) => {
-//     res.render("login", {
-//         page: "login"
-//     });
-// });
+// show login form
+router.get('/login', (req, res) => {
+	res.render('login', {
+		page: 'login'
+	});
+});
 
 // // handling login logic
 // router.post("/login", passport.authenticate("local", {
@@ -115,7 +114,6 @@ router.get("/", async (req, res) => {
 //     failureFlash: true,
 //     successFlash: "Welcome back."
 // }), function (req, res) {});
-
 
 // // logout
 // router.get("/logout", (req, res) => {
@@ -367,9 +365,9 @@ router.get("/", async (req, res) => {
 //         if (err) {
 //             req.flash("error", "Something went wrong!");
 //             return res.redirect("back");
-        // }
-        // res.redirect("/campgrounds");
-    // });
+// }
+// res.redirect("/campgrounds");
+// });
 // });
 
 module.exports = router;
