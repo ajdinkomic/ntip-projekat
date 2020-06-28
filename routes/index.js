@@ -1,51 +1,48 @@
 const express = require('express'),
 	router = express.Router(),
 	passport = require('passport'),
-	// User = require('../models/user'),
+	User = require('../models/user'),
 	// Campground = require("../models/campground"),
 	// Notification = require("../models/notification"),
 	// Review = require("../models/review"),
 	async = require('async'),
-	// multer = require("multer"),
-	// cloudinary = require("cloudinary").v2,
-	// nodemailer = require("nodemailer"),
-	// crypto = require("crypto"),
+	multer = require('multer'),
+	cloudinary = require('cloudinary').v2,
+	nodemailer = require('nodemailer'),
+	crypto = require('crypto'),
 	{ isLoggedIn } = require('../middleware');
 
-// // multer config
-// const storage = multer.diskStorage({
-//     filename: (req, file, callback) => {
-//         callback(null, Date.now() + file.originalname);
-//     }
-// });
-// const imageFilter = (req, file, cb) => {
-//     // only accept images
-//     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
-//         return cb(new Error("Only image files are allowed!"), false);
-//     }
-//     cb(null, true);
-// }
-// const upload = multer({
-//     storage: storage,
-//     fileFilter: imageFilter
-// });
+// multer config
+const storage = multer.diskStorage({
+	filename: (req, file, callback) => {
+		callback(null, Date.now() + file.originalname);
+	}
+});
+const imageFilter = (req, file, cb) => {
+	// only accept images
+	if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+		return cb(new Error('Only image files are allowed!'), false);
+	}
+	cb(null, true);
+};
+const upload = multer({
+	storage: storage,
+	fileFilter: imageFilter
+});
 
-// // cloudinary config
-// cloudinary.config({
-//     cloud_name: "ajdinkomiccloud",
-//     api_key: process.env.CLOUDINARY_API,
-//     api_secret: process.env.CLOUDINARY_SECRET
-// });
+// cloudinary config
+cloudinary.config({
+	cloud_name: 'ajdinkomiccloud',
+	api_key: process.env.CLOUDINARY_API,
+	api_secret: process.env.CLOUDINARY_SECRET
+});
 
 // LANDING PAGE
 router.get('/', async (req, res) => {
 	try {
-		// let campCount = await Campground.estimatedDocumentCount();
-		// let userCount = await User.estimatedDocumentCount();
-		// let reviewCount = await Review.estimatedDocumentCount();
 		res.render('landing');
 	} catch (err) {
-		// req.flash("error", "Landing page could not be loaded properly!");
+		req.flash('error', 'Landing page could not be loaded properly!');
 		res.redirect('back');
 	}
 });
@@ -61,44 +58,37 @@ router.get('/register', (req, res) => {
 	});
 });
 
-// //handle sign up logic
-// router.post("/register", upload.single("image"), async (req, res) => {
-//     let result, profileImage, profileImageId;
-//     if (req.file) {
-//         result = await cloudinary.uploader.upload(req.file.path);
-//         profileImage = result.secure_url;
-//         profileImageId = result.public_id;
-//     }
-//     const newUser = new User({
-//         username: req.body.username,
-//         firstName: req.body.firstName,
-//         lastName: req.body.lastName,
-//         profileImage: profileImage,
-//         profileImageId: profileImageId,
-//         email: req.body.email,
-//         facebook: req.body.facebook,
-//         youtube: req.body.youtube,
-//         twitter: req.body.twitter,
-//         linkedIn: req.body.linkedIn
-//     });
-//     if (req.body.adminCode === process.env.ADMINCODE) {
-//         newUser.isAdmin = true;
-//     }
-//     if (req.body.shareEmail === "share") {
-//         newUser.shareEmail = true;
-//     }
-//     User.register(newUser, req.body.password, (err, user) => {
-//         if (err) {
-//             return res.render("register", {
-//                 errorMessage: err.message
-//             });
-//         }
-//         passport.authenticate("local")(req, res, () => {
-//             req.flash("success", "Successfully Signed Up! Nice to meet you " + user.username + ".");
-//             res.redirect("/campgrounds");
-//         });
-//     });
-// });
+// handle sign up logic
+router.post('/register', upload.single('image'), async (req, res) => {
+	let result, profileImage, profileImageId;
+	if (req.file) {
+		result = await cloudinary.uploader.upload(req.file.path);
+		profileImage = result.secure_url;
+		profileImageId = result.public_id;
+	}
+	const newUser = new User({
+		username: req.body.username,
+		firstName: req.body.firstName,
+		lastName: req.body.lastName,
+		profileImage: profileImage,
+		profileImageId: profileImageId,
+		email: req.body.email
+	});
+	if (req.body.adminCode === process.env.ADMINCODE) {
+		newUser.isAdmin = true;
+	}
+	User.register(newUser, req.body.password, (err, user) => {
+		if (err) {
+			return res.render('register', {
+				errorMessage: err.message
+			});
+		}
+		passport.authenticate('local')(req, res, () => {
+			req.flash('success', 'Successfully Signed Up! Nice to meet you ' + user.username + '.');
+			res.redirect('/');
+		});
+	});
+});
 
 // show login form
 router.get('/login', (req, res) => {
