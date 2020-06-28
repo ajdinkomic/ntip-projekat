@@ -1,0 +1,13 @@
+<div class="container-fluid flashalert text-center">
+	<div class="row justify-content-center">
+		<div class="col-12">
+			<% if(errorMessage && errorMessage.length > 0){ %>
+			<!-- empty array isn't false so we need to make sure message does exist and it isn't an empty array (its length so must be > 0) -->
+			<div class="alert alert-danger" role="alert"><%= errorMessage %></div>
+			<% } %> <% if(successMessage && successMessage.length > 0){ %>
+			<!-- empty array isn't false so we need to make sure message does exist and it isn't an empty array (its length so must be > 0) -->
+			<div class="alert alert-success" role="alert"><%= successMessage %></div>
+			<% } %>
+		</div>
+	</div>
+</div>
