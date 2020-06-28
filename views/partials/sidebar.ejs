@@ -4,45 +4,54 @@
 			<!-- <p class="d-md-none"><em>NTIP</em></p>
 			<p class="d-none d-md-block"><em>Online Biblioteka</em></p> -->
 		</li>
+		<% if(currentUser){ %>
 		<li class="mt-2 text-md-center">
-			<img
-				src="/img/profileImage.jpg"
-				alt="Profilna slika"
-				class="profile-image"
-			/>
+			<% if(currentUser.profileImage) { %>
+			<img src="<%=currentUser.profileImage%>" alt="Profilna slika" class="profile-image" />
+			<% } else { %>
+			<i class="fas fa-user" class="profile-image"></i>
+			<% } %>
 		</li>
 		<li class="mt-1 d-none d-md-block text-md-center">
-			<h6 class="profile-name">John Smith</h6>
+			<h6 class="profile-name"><%= currentUser.firstName + " " + currentUser.lastName %></h6>
 		</li>
+		<% } %>
 		<li class="mt-4 pl-md-3">
-			<a href="/"
-				><i class="fas fa-home"></i
-				><span class="d-none d-md-inline ml-2">Početna</span></a
-			>
-		</li>
-		<li class="mt-2 pl-md-3">
-			<a href="#"
-				><i class="fas fa-heart"></i
-				><span class="d-none d-md-inline ml-2">Favoriti</span>
+			<a href="/">
+				<i class="fas fa-home"></i>
+				<span class="d-none d-md-inline ml-2">Početna</span>
 			</a>
 		</li>
 		<li class="mt-2 pl-md-3">
-			<a href="#"
-				><i class="fas fa-comment"></i
-				><span class="d-none d-md-inline ml-2">Recenzije</span>
+			<a href="#">
+				<i class="fas fa-heart"></i>
+				<span class="d-none d-md-inline ml-2">Favoriti</span>
 			</a>
 		</li>
 		<li class="mt-2 pl-md-3">
-			<a href="#"
-				><i class="fas fa-cog"></i
-				><span class="d-none d-md-inline ml-2">Postavke</span>
+			<a href="#">
+				<i class="fas fa-comment"></i>
+				<span class="d-none d-md-inline ml-2">Recenzije</span>
 			</a>
 		</li>
 		<li class="mt-2 pl-md-3">
-			<a href="#"
-				><i class="fas fa-sign-out-alt"></i
-				><span class="d-none d-md-inline ml-2">Odjava</span>
+			<a href="#">
+				<i class="fas fa-cog"></i>
+				<span class="d-none d-md-inline ml-2">Postavke</span>
 			</a>
+		</li>
+		<li class="mt-2 pl-md-3">
+			<% if(currentUser){ %>
+			<a href="/logout">
+				<i class="fas fa-sign-out-alt"></i>
+				<span class="d-none d-md-inline ml-2">Odjava</span>
+			</a>
+			<% } else{ %>
+			<a href="/login">
+				<i class="fas fa-sign-in-alt"></i>
+				<span class="d-none d-md-inline ml-2">Prijava</span>
+			</a>
+			<% } %>
 		</li>
 	</ul>
 </aside>

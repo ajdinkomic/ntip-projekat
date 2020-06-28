@@ -84,7 +84,7 @@ router.post('/register', upload.single('image'), async (req, res) => {
 			});
 		}
 		passport.authenticate('local')(req, res, () => {
-			req.flash('success', 'Successfully Signed Up! Nice to meet you ' + user.username + '.');
+			req.flash('success', 'Uspješno ste se registrovali! Dobrodošli, ' + user.username + '.');
 			res.redirect('/');
 		});
 	});
@@ -97,20 +97,24 @@ router.get('/login', (req, res) => {
 	});
 });
 
-// // handling login logic
-// router.post("/login", passport.authenticate("local", {
-//     successRedirect: "/campgrounds",
-//     failureRedirect: "/login",
-//     failureFlash: true,
-//     successFlash: "Welcome back."
-// }), function (req, res) {});
+// handling login logic
+router.post(
+	'/login',
+	passport.authenticate('local', {
+		successRedirect: '/',
+		failureRedirect: '/login',
+		failureFlash: true,
+		successFlash: 'Dobrodošli nazad.'
+	}),
+	function (req, res) {}
+);
 
-// // logout
-// router.get("/logout", (req, res) => {
-//     req.logout();
-//     req.flash("success", "See you later!");
-//     res.redirect("/campgrounds");
-// });
+// logout
+router.get('/logout', (req, res) => {
+	req.logout();
+	req.flash('success', 'Uspješno ste se odjavili! Vidimo se.');
+	res.redirect('/');
+});
 
 // // user profile
 // router.get("/users/:username", async (req, res) => {

@@ -1,7 +1,7 @@
 <% include ../partials/head %> <% include ../partials/sidebar %>
 
 <!-- Pretraga -->
-<form action="/books" method="GET" class="top-bar-form">
+<form action="/books" method="GET" class="top-bar-book-show-form">
 	<div class="input-group">
 		<input type="text" class="form-control pl-3" name="search" placeholder="Pretraga..." aria-label="Pretraga" aria-describedby="search-icon" />
 		<div class="input-group-append">
@@ -16,7 +16,8 @@
 
 <main>
 	<!-- Informacije o knjizi -->
-	<section id="book-show" style="background: url(<%=book.volumeInfo.imageLinks.thumbnail%>);">
+	<section id="book-show" style="background: url(<%=book.volumeInfo.imageLinks.thumbnail%>);" class="pt-5">
+		<div class="book-show-overlay"></div>
 		<div class="container pt-5">
 			<div class="row">
 				<div class="col-md-12 mb-4">

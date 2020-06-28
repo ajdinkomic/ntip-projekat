@@ -77,9 +77,9 @@
 										<em><%= category %></em>
 										<% } %> <% } %>
 									</p>
-									<% if(book.volumeInfo.description) { %>
+									<% if(book.searchInfo && book.searchInfo.textSnippet) { %>
 									<p class="card-text">
-										<%= book.volumeInfo.description.substring(0,250) %>...
+										<%- book.searchInfo.textSnippet.substring(0,250) %>
 									</p>
 									<% } %>
 

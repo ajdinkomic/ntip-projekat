@@ -46,12 +46,23 @@ const options = {
 
 // INDEX - prikazi sve knjige
 router.get('/', (req, res) => {
+	//funkcija za sortiranje po nazivu
+	function compare(a, b) {
+		if (a.volumeInfo.title < b.volumeInfo.title) {
+			return -1;
+		}
+		if (a.volumeInfo.title > b.volumeInfo.title) {
+			return 1;
+		}
+		return 0;
+	}
+	//parametar pretrage
 	let searchTerm = req.query.search;
 	fetch(`https://www.googleapis.com/books/v1/volumes?q=%22%22+intitle:${searchTerm}`)
 		.then(res => res.json())
 		.then(books => {
 			console.log(books.items);
-			res.render('books/index', { books: books.items });
+			res.render('books/index', { books: books.items.sort(compare) });
 		});
 });
 
