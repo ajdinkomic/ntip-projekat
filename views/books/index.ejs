@@ -66,7 +66,17 @@
 											</h5>
 										</div>
 										<div class="col-4 col-md-3 col-lg-2 text-center">
-											<a href="#" class="btn add-to-favorites-btn" title="Dodaj u favorite"><i class="far fa-heart"></i></a>
+											<a href="/books/favorites/<%= book.id %>" class="btn add-to-favorites-btn <% if(currentUser && currentUser.favorites && currentUser.favorites.some(function(favorite){ return favorite === book.id })) { %> disabled <% } %>" 
+												<% if(currentUser && currentUser.favorites && currentUser.favorites.some(function(favorite){ return favorite === book.id })) { %>
+													 	title="Dodano u favorite" 
+													<% } else{ %> 
+														title="Dodaj u favorite" 
+													<% } %>
+											>
+												<i
+													class="fa-heart <% if(currentUser && currentUser.favorites && currentUser.favorites.some(function(favorite){ return favorite === book.id })) { %> fas <% } else{ %> far <% } %>"
+												></i>
+											</a>
 										</div>
 									</div>
 									<p class="card-text mt-3">

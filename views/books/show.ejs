@@ -82,7 +82,16 @@
 
 							<!-- Linkovi -->
 							<a href="<%= book.volumeInfo.previewLink %>" class="btn btn-block read-more-btn read-more-book-show-btn mt-5" target="_blank">Otvori Google Knjige</a>
-							<a href="#" class="btn btn-block add-to-favorites-book-show-btn mt-2">Dodaj u favorite</a>
+							<a
+								href="/books/favorites/<%= book.id %>"
+								class="btn btn-block add-to-favorites-book-show-btn mt-2 <% if(currentUser && currentUser.favorites && currentUser.favorites.some(function(favorite){ return favorite === book.id })) { %> disabled <% } %>"
+							>
+								<% if(currentUser && currentUser.favorites && currentUser.favorites.some(function(favorite){ return favorite === book.id })) { %>
+								<i class="fa-heart fas"></i>
+								Dodano u favorite <% } else{ %>
+								<i class="fa-heart far"></i>
+								Dodaj u favorite <% } %>
+							</a>
 						</div>
 					</div>
 				</div>

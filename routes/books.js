@@ -125,21 +125,18 @@ router.get('/:id', (req, res) => {
 
 // });
 
-// // ADD CAMPGROUND TO FAVORITES ROUTE
-// router.get("/favorites/:slug", isLoggedIn, async (req, res) => {
-//     try {
-//         let campground = await Campground.findOne({
-//             slug: req.params.slug
-//         });
-//         req.user.favorites.push(campground._id);
-//         req.user.save();
-//         req.flash("success", `${campground.name} added to favorites!`)
-//         res.redirect("/campgrounds");
-//     } catch (err) {
-//         req.flash("error", "Campground could not be added to favorites!");
-//         res.redirect("back");
-//     }
-// });
+// DODAJ U FAVORITE
+router.get('/favorites/:id', isLoggedIn, async (req, res) => {
+	try {
+		let bookId = req.params.id;
+		req.user.favorites.push(bookId);
+		req.user.save();
+		res.redirect('back');
+	} catch (err) {
+		req.flash('error', 'Knjiga ne može biti dodana u favorite!');
+		res.redirect('back');
+	}
+});
 
 // // DESTROY CAMPGROUND ROUTE
 // router.delete("/:slug", isLoggedIn, checkCampgroundOwnership, async (req, res) => {
