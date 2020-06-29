@@ -1,0 +1,105 @@
+<% include ../partials/head %> <% include ../partials/sidebar %>
+
+<!-- Pretraga -->
+<form action="/books" method="GET" class="top-bar-book-show-form">
+	<div class="input-group">
+		<input type="text" class="form-control pl-3" name="search" placeholder="Pretraga..." aria-label="Pretraga" aria-describedby="search-icon" />
+		<div class="input-group-append">
+			<span class="input-group-text py-0 px-3" id="search-icon">
+				<button type="submit" class="btn p-0">
+					<i class="fas fa-search"></i>
+				</button>
+			</span>
+		</div>
+	</div>
+</form>
+
+<main>
+	<!-- Informacije o knjigama -->
+	<section id="book-show" class="pt-5">
+		<div class="book-show-overlay"></div>
+		<div class="container pt-5">
+			<div class="row">
+				<% for (const book of books){ %>
+				<div class="col-md-12 mb-4">
+					<div class="card px-5 py-4">
+						<div class="card-body">
+							<h5 class="card-title">
+								<%= book.volumeInfo.title %>
+							</h5>
+
+							<% if(book.volumeInfo.averageRating) { %>
+							<p class="card-text mt-3">
+								<strong>Google Books ocjena:</strong>
+								<br />
+								<span title="<%= book.volumeInfo.averageRating %> / 5">
+									<span class="fas fa-star checked-star"></span>
+									<span class="fas fa-star <% if (book.volumeInfo.averageRating >= 1.5) { %> checked-star <% } %>"></span>
+									<span class="fas fa-star <% if (book.volumeInfo.averageRating >= 2.5) { %> checked-star <% } %>"></span>
+									<span class="fas fa-star <% if (book.volumeInfo.averageRating >= 3.5) { %> checked-star <% } %>"></span>
+									<span class="fas fa-star <% if (book.volumeInfo.averageRating >= 4.5) { %> checked-star <% } %>"></span>
+								</span>
+								<em>(<%= book.volumeInfo.ratingsCount %>)</em>
+								<br />
+							</p>
+							<% } %> <% if(book.volumeInfo.subtitle) { %>
+							<p class="card-text mt-3">
+								<strong>Podnaslov:</strong>
+								<br />
+								<em><%= book.volumeInfo.subtitle %></em>
+								<br />
+							</p>
+							<% } %> <% if(book.volumeInfo.authors) { %>
+							<p class="card-text">
+								<strong>Autor/i:</strong>
+								<br />
+								<% for(const author of book.volumeInfo.authors){ %>
+								<em><%= author %></em>
+								<br />
+								<% } %>
+							</p>
+							<% } %> <% if(book.volumeInfo.publishedDate) { %>
+							<p class="card-text">
+								<strong>Datum objavljivanja:</strong>
+								<br />
+								<em><%= book.volumeInfo.publishedDate.split('-').reverse().join('.'); %></em>
+								<br />
+							</p>
+							<% } %> <% if(book.volumeInfo.categories) { %>
+							<p class="card-text">
+								<strong>Kategorije:</strong>
+								<br />
+								<% for(const category of book.volumeInfo.categories){ %>
+								<em><%= category %></em>
+								<br />
+								<% } %>
+							</p>
+							<% } %> <% if(book.volumeInfo.description) { %>
+							<p class="card-text">
+								<strong>Opis:</strong>
+								<em><%- book.volumeInfo.description %></em>
+							</p>
+							<% } %>
+
+							<!-- Linkovi -->
+							<a href="<%= book.volumeInfo.previewLink %>" class="btn btn-block read-more-btn read-more-book-show-btn mt-5" target="_blank">Otvori Google Knjige</a>
+							<a
+								href="/books/favorites/<%= book.id %>"
+								class="btn btn-block add-to-favorites-book-show-btn mt-2 <% if(currentUser && currentUser.favorites && currentUser.favorites.some(function(favorite){ return favorite === book.id })) { %> disabled <% } %>"
+							>
+								<% if(currentUser && currentUser.favorites && currentUser.favorites.some(function(favorite){ return favorite === book.id })) { %>
+								<i class="fa-heart fas"></i>
+								Dodano u favorite <% } else{ %>
+								<i class="fa-heart far"></i>
+								Dodaj u favorite <% } %>
+							</a>
+						</div>
+					</div>
+				</div>
+				<% } %>
+			</div>
+		</div>
+	</section>
+</main>
+
+<% include ../partials/foot %>

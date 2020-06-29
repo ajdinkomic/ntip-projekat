@@ -61,9 +61,47 @@ router.get('/', (req, res) => {
 	fetch(`https://www.googleapis.com/books/v1/volumes?q=%22%22+intitle:${searchTerm}`)
 		.then(res => res.json())
 		.then(books => {
-			console.log(books.items);
+			// console.log(books.items);
 			res.render('books/index', { books: books.items.sort(compare) });
 		});
+});
+
+// PREGLEDAJ FAVORITE
+router.get('/favorites', isLoggedIn, (req, res) => {
+	try {
+		let favorites = req.user.favorites;
+		let promisesArray = new Array();
+
+		for (const favorite of favorites) {
+			let promise = fetch(`https://www.googleapis.com/books/v1/volumes/${favorite}`);
+			promisesArray.push(promise);
+		}
+
+		Promise.all(promisesArray)
+			.then(res => res.json())
+			.then(books => {
+				res.render('books/favorites', { books: books.items });
+			})
+			.catch(err => {
+				console.warn(err);
+			});
+	} catch (err) {
+		req.flash('error', 'Ne možemo prikazati favorite!');
+		res.redirect('back');
+	}
+});
+
+// DODAJ U FAVORITE
+router.get('/favorites/:id', isLoggedIn, async (req, res) => {
+	try {
+		let bookId = req.params.id;
+		req.user.favorites.push(bookId);
+		await req.user.save();
+		res.redirect('back');
+	} catch (err) {
+		req.flash('error', 'Knjiga ne može biti dodana u favorite!');
+		res.redirect('back');
+	}
 });
 
 // SHOW - informacije o pojedinačnim knjigama
@@ -75,67 +113,6 @@ router.get('/:id', (req, res) => {
 		.then(book => {
 			res.render('books/show', { book });
 		});
-});
-
-// // EDIT CAMPGROUND ROUTE
-// router.get("/:slug/edit", isLoggedIn, checkCampgroundOwnership, (req, res) => {
-//     res.render("campgrounds/edit", {
-//         campground: req.campground
-//     });
-// });
-
-// // UPDATE CAMPGROUND ROUTE
-// router.put("/:slug", isLoggedIn, checkCampgroundOwnership, upload.single("image"), async (req, res) => {
-//     delete req.body.campground.rating;
-//     let campground = req.campground; // campground returned from checkCampgroundOwnership in middleware/index
-
-//     if (req.file) {
-//         try {
-//             await cloudinary.uploader.destroy(campground.imageId);
-//             let result = await cloudinary.uploader.upload(req.file.path);
-//             campground.image = result.secure_url;
-//         } catch (err) {
-//             req.flash("error", err.message);
-//             return res.redirect('back');
-//         }
-//     }
-//     if (req.body.campground.location) {
-//         try {
-//             let data = await geocoder.geocode(req.body.campground.location);
-//             campground.lat = data[0].latitude;
-//             campground.lng = data[0].longitude;
-//             campground.location = data[0].formattedAddress;
-//         } catch (err) {
-//             req.flash("error", "Invalid address");
-//             return res.redirect("back");
-//         }
-//     }
-//     campground.name = req.body.campground.name;
-//     campground.price = req.body.campground.price;
-//     campground.description = req.body.campground.description;
-//     campground.save(err => {
-//         if (err) {
-//             req.flash("error", "Campground could not be updated!");
-//             res.redirect("/campgrounds");
-//         } else {
-//             req.flash("success", "Campground successfully updated!");
-//             res.redirect(`/campgrounds/${campground.slug}`);
-//         }
-//     });
-
-// });
-
-// DODAJ U FAVORITE
-router.get('/favorites/:id', isLoggedIn, async (req, res) => {
-	try {
-		let bookId = req.params.id;
-		req.user.favorites.push(bookId);
-		req.user.save();
-		res.redirect('back');
-	} catch (err) {
-		req.flash('error', 'Knjiga ne može biti dodana u favorite!');
-		res.redirect('back');
-	}
 });
 
 // // DESTROY CAMPGROUND ROUTE
