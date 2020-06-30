@@ -49,21 +49,28 @@
 				</a>
 				<div class="dropdown-menu user-dropdown bg-white px-2" aria-labelledby="navbarDropdown">
 					<a class="dropdown-item btn" href="/users/<%=currentUser.username%>">
-						<i class="fas fa-id-card mr-1"></i>
-						Go to profile
+						<i class="fas fa-user mr-2"></i>
+						Profil
+					</a>
+					<a href="/books/favorites" class="dropdown-item btn">
+						<i class="fas fa-heart mr-1"></i>
+						<span>
+							Favoriti <%if (currentUser && currentUser.favorites.length >0) { %>
+							<sup><span class="badge badge-danger rounded-circle"><%= currentUser.favorites.length %></span></sup>
+							<% } %>
+						</span>
+					</a>
+					<a href="#" class="dropdown-item btn">
+						<i class="fas fa-comment mr-1"></i>
+						<span>Recenzije</span>
 					</a>
 					<a class="dropdown-item btn" href="#">
-						<i class="fas fa-user-edit mr-1"></i>
-						Edit profile information
+						<i class="fas fa-cog mr-1"></i>
+						Postavke
 					</a>
 					<a class="dropdown-item btn" href="/logout">
 						<i class="fas fa-sign-out-alt mr-1"></i>
-						Logout
-					</a>
-					<div class="dropdown-divider"></div>
-					<a class="dropdown-item btn" href="/campgrounds/new">
-						<i class="fas fa-plus mr-1"></i>
-						Add new campground
+						Odjava
 					</a>
 				</div>
 			</li>
