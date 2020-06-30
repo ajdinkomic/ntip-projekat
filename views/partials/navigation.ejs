@@ -39,14 +39,33 @@
 
 			<% } else { %>
 
-			<li class="nav-item">
-				<a class="nav-link pl-2 px-lg-3 mx-lg-1 my-1" href="/users/<%=currentUser.username%>">
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle btn text-left my-2 my-lg-0" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<% if(currentUser.profileImage) { %>
 					<img src="<%=currentUser.profileImage%>" class="profile-image-top-bar" alt="<%= currentUser.username %> profile image." />
 					<% } else { %>
 					<i class="fas fa-user mr-1"></i>
 					<% } %> <%= currentUser.username %>
 				</a>
+				<div class="dropdown-menu user-dropdown bg-white px-2" aria-labelledby="navbarDropdown">
+					<a class="dropdown-item btn" href="/users/<%=currentUser.username%>">
+						<i class="fas fa-id-card mr-1"></i>
+						Go to profile
+					</a>
+					<a class="dropdown-item btn" href="#">
+						<i class="fas fa-user-edit mr-1"></i>
+						Edit profile information
+					</a>
+					<a class="dropdown-item btn" href="/logout">
+						<i class="fas fa-sign-out-alt mr-1"></i>
+						Logout
+					</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item btn" href="/campgrounds/new">
+						<i class="fas fa-plus mr-1"></i>
+						Add new campground
+					</a>
+				</div>
 			</li>
 
 			<% } %>

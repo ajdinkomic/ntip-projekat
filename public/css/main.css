@@ -6,6 +6,7 @@
 
 	--main-color: #646464;
 	--green-color: #1e5e4f;
+	--red-color: #e74c3c;
 	--landing-overlay-color: rgba(0, 0, 0, 0.55);
 	--landing-gradient: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
 
@@ -237,6 +238,19 @@ a:hover {
 	margin-right: 0.5rem;
 }
 
+.user-dropdown {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.user-dropdown .dropdown-item {
+	color: var(--main-color) !important;
+}
+
+.dropdown-toggle {
+	margin-left: -10px;
+}
+
 /*************************************************
               LANDING
 *************************************************/
@@ -302,6 +316,7 @@ a:hover {
 	border-top-left-radius: 25px;
 	border-bottom-left-radius: 25px;
 	border-right: 0;
+	padding: 1.25rem 0.75rem;
 }
 
 #landing-header .input-group > .input-group-append > .btn,
@@ -535,6 +550,71 @@ a:hover {
 	background: rgba(0, 0, 0, 0.1);
 }
 
+/*************************************************
+              BOOKS - FAVORITES
+*************************************************/
+#book-favorites {
+	margin-left: 15%;
+	min-height: 100vh;
+	position: relative;
+}
+
+#book-favorites .card {
+	box-shadow: var(--card-box-shadow);
+	background: #f5f5f5;
+	border: none;
+	height: 27rem;
+	position: relative;
+}
+
+#book-favorites .card h5 {
+	font-size: var(--font-24);
+	line-height: var(--line-32);
+	font-weight: 700;
+}
+
+#book-favorites .card p {
+	font-size: var(--font-16);
+	line-height: var(--line-19);
+}
+
+#book-favorites .card .btn {
+	position: absolute;
+	bottom: 70px;
+	width: 85%;
+}
+
+#book-favorites .card button.btn {
+	bottom: 20px;
+}
+
+#book-favorites .card img {
+	height: 8rem;
+	box-shadow: var(--card-box-shadow);
+	border-radius: 0.25rem;
+}
+
+.book-img-link {
+	position: relative;
+	border-top-left-radius: 0.25rem;
+	border-top-right-radius: 0.25rem;
+}
+
+.remove-from-favorites-btn {
+	color: var(--red-color);
+	font-size: var(--font-16);
+	transition: all 0.2s ease;
+	border: 1px solid var(--red-color);
+}
+
+.remove-from-favorites-btn:hover,
+.remove-from-favorites-btn:focus,
+.remove-from-favorites-btn:active {
+	color: #fff;
+	opacity: 0.9;
+	background: var(--red-color);
+}
+
 /*=======================================
             RESPONSIVENESS
 ========================================*/
@@ -568,6 +648,15 @@ a:hover {
 	#landing-header .input-group {
 		width: 60%;
 	}
+
+	#book-favorites .card .btn {
+		width: 89%;
+	}
+	.user-dropdown {
+		margin-left: -7.5rem;
+		margin-top: 5px;
+		margin-bottom: 5px;
+	}
 }
 
 @media (min-width: 1200px) {
@@ -577,6 +666,10 @@ a:hover {
 
 	#landing-header .input-group {
 		width: 50%;
+	}
+
+	#book-favorites .card .btn {
+		width: 85%;
 	}
 }
 

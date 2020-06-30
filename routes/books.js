@@ -62,29 +62,28 @@ router.get('/', (req, res) => {
 		.then(res => res.json())
 		.then(books => {
 			// console.log(books.items);
-			res.render('books/index', { books: books.items.sort(compare) });
+			res.render('books/index', { books: books.items.sort(compare), page: '' });
 		});
 });
 
 // PREGLEDAJ FAVORITE
-router.get('/favorites', isLoggedIn, (req, res) => {
+router.get('/favorites', isLoggedIn, async (req, res) => {
 	try {
 		let favorites = req.user.favorites;
-		let promisesArray = new Array();
+		let books = new Array();
 
 		for (const favorite of favorites) {
-			let promise = fetch(`https://www.googleapis.com/books/v1/volumes/${favorite}`);
-			promisesArray.push(promise);
+			await fetch(`https://www.googleapis.com/books/v1/volumes/${favorite}`)
+				.then(res => res.json())
+				.then(data => {
+					books.push(data);
+				})
+				.catch(err => {
+					console.warn('Error: ' + err);
+				});
 		}
 
-		Promise.all(promisesArray)
-			.then(res => res.json())
-			.then(books => {
-				res.render('books/favorites', { books: books.items });
-			})
-			.catch(err => {
-				console.warn(err);
-			});
+		res.render('books/favorites', { books, page: 'favoriti' });
 	} catch (err) {
 		req.flash('error', 'Ne možemo prikazati favorite!');
 		res.redirect('back');
@@ -104,6 +103,16 @@ router.get('/favorites/:id', isLoggedIn, async (req, res) => {
 	}
 });
 
+// UKLONI IZ FAVORITA
+router.delete('/favorites/:id', isLoggedIn, async (req, res) => {
+	let favorites = req.user.favorites;
+	let filteredFavorites = favorites.filter(value => value != req.params.id);
+	req.user.favorites = filteredFavorites;
+	await req.user.save();
+	req.flash('success', 'Uspješno ste uklonili knjigu iz favorita!');
+	res.redirect('back');
+});
+
 // SHOW - informacije o pojedinačnim knjigama
 router.get('/:id', (req, res) => {
 	//pronadji knjigu s tim ID-em
@@ -111,25 +120,8 @@ router.get('/:id', (req, res) => {
 	fetch(`https://www.googleapis.com/books/v1/volumes/${bookId}`)
 		.then(res => res.json())
 		.then(book => {
-			res.render('books/show', { book });
+			res.render('books/show', { book, page: '' });
 		});
 });
-
-// // DESTROY CAMPGROUND ROUTE
-// router.delete("/:slug", isLoggedIn, checkCampgroundOwnership, async (req, res) => {
-//     let campground = req.campground; // campground returned from checkCampgroundOwnership in middleware/index
-
-//     try {
-//         await campground.deleteOne();
-//     } catch (err) {
-//         req.flash("error", "Campground could not be removed!");
-//         return res.redirect("back");
-//     }
-//     req.flash("success", "Campground succesfully removed!");
-//     res.redirect("/campgrounds");
-// });
-
-// // function for escaping regular expressions in search input, /g is to replace all ocurrences of special characters (globally)
-// let escapeRegexp = text => text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 
 module.exports = router;

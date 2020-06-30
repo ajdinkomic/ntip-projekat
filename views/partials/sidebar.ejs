@@ -25,7 +25,7 @@
 		<li class="mt-2 pl-md-3">
 			<a href="/books/favorites">
 				<i class="fas fa-heart"></i>
-				<span class="d-none d-md-inline ml-2">
+				<span class="d-none d-md-inline ml-2" <%if (page && page == "favoriti") { %> style="border-bottom: 1px solid #fff;" <% } %>>
 					Favoriti <%if (currentUser && currentUser.favorites.length >0) { %>
 					<sup><span class="badge badge-danger rounded-circle"><%= currentUser.favorites.length %></span></sup>
 					<% } %>
@@ -35,13 +35,13 @@
 		<li class="mt-2 pl-md-3">
 			<a href="#">
 				<i class="fas fa-comment"></i>
-				<span class="d-none d-md-inline ml-2">Recenzije</span>
+				<span class="d-none d-md-inline ml-2" <%if (page && page == "recenzije") { %> style="border-bottom: 1px solid #fff;" <% } %>>Recenzije</span>
 			</a>
 		</li>
 		<li class="mt-2 pl-md-3">
 			<a href="#">
 				<i class="fas fa-cog"></i>
-				<span class="d-none d-md-inline ml-2">Postavke</span>
+				<span class="d-none d-md-inline ml-2" <%if (page && page == "postavke") { %> style="border-bottom: 1px solid #fff;" <% } %>>Postavke</span>
 			</a>
 		</li>
 		<li class="mt-2 pl-md-3">
