@@ -2,22 +2,22 @@ const express = require('express'),
 	router = express.Router(),
 	passport = require('passport'),
 	User = require('../models/user'),
-	Review = require("../models/review"),
+	Review = require('../models/review'),
 	async = require('async'),
 	multer = require('multer'),
 	cloudinary = require('cloudinary').v2,
 	nodemailer = require('nodemailer'),
 	crypto = require('crypto'),
-	{ isLoggedIn } = require('../middleware');
+	{ isLoggedIn, checkUserPrivileges } = require('../middleware');
 
-// multer config
+// multer konfiguracija
 const storage = multer.diskStorage({
 	filename: (req, file, callback) => {
 		callback(null, Date.now() + file.originalname);
 	}
 });
 const imageFilter = (req, file, cb) => {
-	// only accept images
+	// prihvati samo slike
 	if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
 		return cb(new Error('Only image files are allowed!'), false);
 	}
@@ -28,14 +28,14 @@ const upload = multer({
 	fileFilter: imageFilter
 });
 
-// cloudinary config
+// cloudinary konfiguracija
 cloudinary.config({
 	cloud_name: 'ajdinkomiccloud',
 	api_key: process.env.CLOUDINARY_API,
 	api_secret: process.env.CLOUDINARY_SECRET
 });
 
-// LANDING PAGE
+// LANDING STRANICA
 router.get('/', async (req, res) => {
 	try {
 		res.render('landing');
@@ -46,17 +46,17 @@ router.get('/', async (req, res) => {
 });
 
 //================================================
-//          AUTH ROUTES
+//          AUTENTIFIKACIJA
 //================================================
 
-// show register form
+// REGISTRACIJA - forma
 router.get('/register', (req, res) => {
 	res.render('register', {
 		page: 'register'
 	});
 });
 
-// handle sign up logic
+// REGISTRACIJA - logika
 router.post('/register', upload.single('image'), async (req, res) => {
 	let result, profileImage, profileImageId;
 	if (req.file) {
@@ -88,14 +88,14 @@ router.post('/register', upload.single('image'), async (req, res) => {
 	});
 });
 
-// show login form
+// PRIJAVA - forma
 router.get('/login', (req, res) => {
 	res.render('login', {
 		page: 'login'
 	});
 });
 
-// handling login logic
+// PRIJAVA - logika
 router.post(
 	'/login',
 	passport.authenticate('local', {
@@ -107,37 +107,70 @@ router.post(
 	function (req, res) {}
 );
 
-// logout
+// ODJAVA
 router.get('/logout', (req, res) => {
 	req.logout();
 	req.flash('success', 'Uspješno ste se odjavili! Vidimo se.');
 	res.redirect('/');
 });
 
-// user profile
-router.get("/users/:username", async (req, res) => {
-    try {
-        let user = await User.findOne({
-            username: req.params.username
-        });
-        let reviews = await Review.find({
-            "author.id": user._id
-        });
-        res.render("users/show", {
-            user,
-						reviews,
-						page: 'profil'
-        });
-    } catch (err) {
-        req.flash("error", 'Korisnik s tim korisničkom imenom nije pronađen!');
-        res.redirect("back");
-    }
+// PRIKAZI PROFIL
+router.get('/users/:username', async (req, res) => {
+	try {
+		let user = await User.findOne({
+			username: req.params.username
+		});
+		let reviews = await Review.find({
+			'author.id': user._id
+		});
+		res.render('users/show', {
+			user,
+			reviews,
+			page: 'profil'
+		});
+	} catch (err) {
+		req.flash('error', 'Korisnik s tim korisničkom imenom nije pronađen!');
+		res.redirect('back');
+	}
 });
 
-// // forgot password
-// router.get("/forgot", (req, res) => {
-//     res.render("forgot");
-// });
+// UREDI PROFIL - forma
+router.get('/users/:username/edit', isLoggedIn, checkUserPrivileges, (req, res) => {
+	res.render('users/edit', { user: req.userToEdit });
+});
+
+// UREDI PROFIL - logika
+router.post('/users/:username/edit', isLoggedIn, checkUserPrivileges, upload.single('image'), async (req, res) => {
+	let user = req.userToEdit;
+
+	if (req.file) {
+		try {
+			await cloudinary.uploader.destroy(user.profileImageId);
+			let result = await cloudinary.uploader.upload(req.file.path);
+			user.profileImage = result.secure_url;
+		} catch (err) {
+			req.flash('error', err.message);
+			return res.redirect('back');
+		}
+	}
+	user.username = req.body.username;
+	user.firstName = req.body.firstName;
+	user.lastName = req.body.lastName;
+	user.save(err => {
+		if (err) {
+			req.flash('error', 'Profil ne može biti ažuriran!');
+			res.redirect('/users');
+		} else {
+			req.flash('success', 'Uspješno ste uredili profil.');
+			res.redirect(`/users/${user.username}`);
+		}
+	});
+});
+
+// PROMIJENI SIFRU - forma
+router.get("/forgot", (req, res) => {
+    res.render("forgot");
+});
 
 // router.post("/forgot", (req, res, next) => {
 //     async.waterfall([
@@ -279,7 +312,7 @@ router.get("/users/:username", async (req, res) => {
 //             req.flash("error", "Something went wrong!");
 //             return res.redirect("back");
 // }
-// res.redirect("/campgrounds");
+// res.redirect("/users");
 // });
 // });
 

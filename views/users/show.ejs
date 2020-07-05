@@ -15,33 +15,36 @@
 </form>
 
 <main>
-    <% include ../partials/flashmessages %>
+	<% include ../partials/flashmessages %>
 	<!-- Informacije o korisniku -->
 	<section id="user-show" class="pt-5">
-        <div class="container pt-5">
+		<div class="container pt-5">
 			<div class="row">
 				<div class="col-md-12 mb-4">
 					<div class="card px-2 px-md-3 px-lg-5 py-4">
 						<div class="card-body text-center">
+							<% if (!user){ %>
+							<div class="col-md-12 text-center pt-5">
+								<h1>Korisnik nije pronađen!</h1>
+							</div>
+							<% } else{ %> <% if(user.profileImage) { %>
+							<img src="<%=user.profileImage%>" alt="Profilna slika" class="profile-image mb-3" />
+							<% } else { %>
+							<i class="fas fa-user" class="profile-image"></i>
+							<% } %>
 
-                            <% if (!user){ %>
-                                <div class="col-md-12 text-center pt-5">
-                                    <h1>Korisnik nije pronađen!</h1>
-                                </div>
-                                <% } else{ %>
-                                    
-                                    <% if(user.profileImage) { %>
-                                        <img src="<%=user.profileImage%>" alt="Profilna slika" class="profile-image mb-3" />
-                                        <% } else { %>
-                                            <i class="fas fa-user" class="profile-image"></i>
-                                            <% } %>
-                                            
-                                            <h1 class="mb-2"><%= user.firstName + ' ' + user.lastName %></h1>
-                                            <p class="mb-2"><%= user.email %></p>
-                                            <p class="mb-2">Recenzija: <%= reviews.length %></p>
+							<h1 class="mb-2"><%= user.firstName + ' ' + user.lastName %></h1>
+							<p class="mb-2"><%= user.email %></p>
+							<p class="mb-2">Recenzija: <%= reviews.length %></p>
 
-                                            <% } %>
-							
+                            <% if ((currentUser && user.username == currentUser.username) || (currentUser && currentUser.isAdmin)){ %>
+                                <a href="/users/<%= user.username %>/edit" class="btn read-more-btn read-more-book-show-btn">
+                                    <i class="fas fa-user-edit"></i>
+                                    Uredi profil
+                                </a>
+							<% } %>
+
+							<% } %>
 						</div>
 					</div>
 				</div>
@@ -56,31 +59,30 @@
 								Recenzije korisnika
 							</h5>
 
-							<% if(reviews && reviews.length > 0) { %>
-                                <% for (const review of reviews){ %>
-									<div class="review-wrapper p-3 my-2">
-                                        <% if(currentUser && (currentUser.id==user.id || currentUser.isAdmin)) { %>
-                                            <form action="/books/<%= review.bookId %>/reviews/<%= review.id %>?_method=DELETE" method="POST" class="d-inline">
-                                                <button type="submit" class="btn remove-from-favorites-btn float-right">
-                                                    <i class="fa-trash fas"></i>
-                                                </button>
-                                            </form>
-                                            <% } %>
-                                            <h6><a href="/users/<%= review.author.username %>" class="author-username"><%= review.author.username %></a>
-                                                <span>
-                                                    <%- '<i class="fas fa-star checked-star"></i>' . repeat(review.stars); %>
-                                                </span>
-                                            </h6>
-                                            <p><em><%= review.text %></em></p>
-                                            <p><small><em><%= moment(review.createdAt).fromNow() %></em></small></p>
-                                            <a href="/books/<%= review.bookId %>" class="btn read-more-btn read-more-book-show-btn">
-                                                Otvori knjigu
-                                </a>
-                                        </div>
+							<% if(reviews && reviews.length > 0) { %> <% for (const review of reviews){ %>
+							<div class="review-wrapper p-3 my-2">
+								<% if(currentUser && (currentUser.id==user.id || currentUser.isAdmin)) { %>
+								<form action="/books/<%= review.bookId %>/reviews/<%= review.id %>?_method=DELETE" method="POST" class="d-inline">
+									<button type="submit" class="btn remove-from-favorites-btn float-right">
+										<i class="fa-trash fas"></i>
+									</button>
+								</form>
 								<% } %>
-								<% } %>
-
-							
+								<h6>
+									<a href="/users/<%= review.author.username %>" class="author-username"><%= review.author.username %></a>
+									<span>
+										<%- '<i class="fas fa-star checked-star"></i>' . repeat(review.stars); %>
+									</span>
+								</h6>
+								<p><em><%= review.text %></em></p>
+								<p>
+									<small><em><%= moment(review.createdAt).fromNow() %></em></small>
+								</p>
+								<a href="/books/<%= review.bookId %>" class="btn read-more-btn read-more-book-show-btn">
+									Otvori knjigu
+								</a>
+							</div>
+							<% } %> <% } %>
 						</div>
 					</div>
 				</div>

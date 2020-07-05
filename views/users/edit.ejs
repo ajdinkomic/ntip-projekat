@@ -1,4 +1,4 @@
-<% include ./partials/head %>
+<% include ../partials/head %>
 
 <main>
 	<!-- Uredi profil - section -->
@@ -27,22 +27,6 @@
 										title="Može sadržavati slova, brojeve i '_' ili '-'. Minimalna dužina: 4 znaka. Maksimalna dužina: 10 znakova."
 										value="<%= user.username %>"
 										required
-									/>
-								</div>
-
-								<div class="input-group mb-3">
-									<div class="input-group-prepend">
-										<span class="input-group-text" id="password"><i class="fas fa-lock"></i></span>
-									</div>
-									<input
-										type="password"
-										name="password"
-										class="form-control"
-										placeholder="Šifra*"
-										aria-label="Šifra"
-										aria-describedby="password"
-										pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$"
-										title="Mora sadržavati barem jedno veliko slovo i jedno malo slovo bez kvačica, broj i specijalni znak. Minimalna dužina: 8 znakova."
 									/>
 								</div>
 
@@ -91,17 +75,23 @@
 									/>
 								</div>
 
-								<div class="input-group mb-3">
+								<div class="input-group mb-0">
 									<div class="input-group-prepend">
 										<span class="input-group-text" id="imageDesc"><i class="fas fa-file-image"></i></span>
 									</div>
 									<input type="file" class="form-control" id="image" title="Profilna slika" aria-describedby="imageDesc" name="image" accept="image/*" />
 								</div>
+								<p>
+									<small><em>Ukoliko želite promijeniti profilnu sliku, uploadajte novu.</em></small>
+								</p>
 
 								<div class="form-group mt-4 mt-md-5">
 									<button class="btn read-more-btn register-btn btn-block" type="submit">Uredi</button>
 								</div>
 							</form>
+							<p class="text-center">
+								<em><a href="/forgot">Promijeni šifru</a></em>
+							</p>
 						</div>
 					</div>
 				</div>
@@ -110,4 +100,4 @@
 	</section>
 </main>
 
-<% include ./partials/foot %>
+<% include ../partials/foot %>
