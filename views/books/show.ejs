@@ -14,14 +14,16 @@
 	</div>
 </form>
 
+
 <main>
+	<% include ../partials/flashmessages %>
 	<!-- Informacije o knjizi -->
 	<section id="book-show" style="background: url(<%=book.volumeInfo.imageLinks.thumbnail%>);" class="pt-5">
 		<div class="book-show-overlay"></div>
 		<div class="container pt-5">
 			<div class="row">
 				<div class="col-md-12 mb-4">
-					<div class="card px-5 py-4">
+					<div class="card px-2 px-md-3 px-lg-5 py-4">
 						<div class="card-body">
 							<h5 class="card-title">
 								<%= book.volumeInfo.title %>
@@ -41,6 +43,20 @@
 								<em>(<%= book.volumeInfo.ratingsCount %>)</em>
 								<br />
 							</p>
+							<% } %> <% if(average) { %>
+								<p class="card-text mt-3">
+									<strong>Ocjena naših čitaoca:</strong>
+									<br />
+									<span title="<%= average %> / 5">
+										<span class="fas fa-star checked-star"></span>
+										<span class="fas fa-star <% if (average >= 1.5) { %> checked-star <% } %>"></span>
+										<span class="fas fa-star <% if (average >= 2.5) { %> checked-star <% } %>"></span>
+										<span class="fas fa-star <% if (average >= 3.5) { %> checked-star <% } %>"></span>
+										<span class="fas fa-star <% if (average >= 4.5) { %> checked-star <% } %>"></span>
+									</span>
+									<em>(<%= reviews.length %>)</em>
+									<br />
+								</p>
 							<% } %> <% if(book.volumeInfo.subtitle) { %>
 							<p class="card-text mt-3">
 								<strong>Podnaslov:</strong>
@@ -76,6 +92,7 @@
 							<% } %> <% if(book.volumeInfo.description) { %>
 							<p class="card-text">
 								<strong>Opis:</strong>
+								<br />
 								<em><%- book.volumeInfo.description %></em>
 							</p>
 							<% } %>
@@ -92,6 +109,115 @@
 								<i class="fa-heart far"></i>
 								Dodaj u favorite <% } %>
 							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Recenzije -->
+			<div class="row">
+				<div class="col-md-12 mb-4">
+					<div class="card px-2 px-md-3 px-lg-5 py-4">
+						<div class="card-body">
+							<h5 class="card-title text-center mb-5">
+								Recenzije
+							</h5>
+
+							<% if(reviews && reviews.length > 0) { %>
+								<% for (const review of reviews){ %>
+									<div class="review-wrapper p-3 my-2">
+										<% if(currentUser && (currentUser.username == review.author.username || currentUser.isAdmin)) { %>
+												<form action="/books/<%= book.id %>/reviews/<%= review.id %>?_method=DELETE" method="POST" class="d-inline">
+													<button type="submit" class="btn remove-from-favorites-btn float-right">
+														<i class="fa-trash fas"></i>
+													</button>
+												</form>
+										<% } %>
+									<h6><a href="/users/<%= review.author.username %>" class="author-username"><%= review.author.username %></a>
+										<span>
+											<%- '<i class="fas fa-star checked-star"></i>' . repeat(review.stars); %>
+										</span>
+									</h6>
+									<p><em><%= review.text %></em></p>
+									<small><em><%= moment(review.createdAt).fromNow() %></em></small>
+								</div>
+								<% } %>
+								<% } %>
+
+							<% if(currentUser) { %>
+							<form action="/books/<%= book.id %>/reviews" method="POST" class="mt-5 p-3 review-form">
+
+								<h5 class="text-center mb-5">
+									Nova recenzija
+								</h5>
+
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text review-stars-icon" title="Odlično">
+											<%- '<i class="fas fa-star checked-star"></i>' . repeat(5); %>
+										</span>
+									</div>
+									<input type="radio" name="review[stars]" class="form-control" title="Odlično" value="5" checked />
+								</div>
+
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text review-stars-icon" title="Vrlodobro">
+											<%- '<i class="fas fa-star checked-star"></i>' . repeat(4); %>
+										</span>
+									</div>
+									<input type="radio" name="review[stars]" class="form-control" title="Vrlodobro" value="4" />
+								</div>
+
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text review-stars-icon" title="Dobro">
+											<%- '<i class="fas fa-star checked-star"></i>' . repeat(3); %>
+										</span>
+									</div>
+									<input type="radio" name="review[stars]" class="form-control" title="Dobro" value="3" />
+								</div>
+
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text review-stars-icon" title="Loše">
+											<%- '<i class="fas fa-star checked-star"></i>' . repeat(2); %>
+										</span>
+									</div>
+									<input type="radio" name="review[stars]" class="form-control" title="Loše" value="2" />
+								</div>
+
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text review-stars-icon" title="Veoma loše">
+											<i class="fas fa-star checked-star"></i>
+										</span>
+									</div>
+									<input type="radio" name="review[stars]" class="form-control" title="Veoma loše" value="1" />
+								</div>
+
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text" id="review-txt-icon"><i class="fas fa-comment"></i></span>
+									</div>
+									<textarea
+										name="review[text]"
+										type="text"
+										placeholder="Napišite recenziju..."
+										title="Tekst recenzije"
+										id="review-text"
+										cols="30"
+										rows="5"
+										class="form-control"
+									></textarea>
+								</div>
+
+								<div class="form-group mt-4">
+									<button class="btn read-more-btn register-btn btn-block" type="submit">Ostavi recenziju</button>
+								</div>
+								
+							</form>
+							<% } %>
 						</div>
 					</div>
 				</div>

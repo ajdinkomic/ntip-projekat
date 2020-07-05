@@ -1,14 +1,13 @@
 const express = require('express'),
 	router = express.Router(),
-	// Campground = require("../models/campground"),
+	Review = require('../models/review'),
 	// User = require("../models/user"),
 	// Notification = require("../models/notification"),
 	multer = require('multer'),
 	fetch = require('node-fetch'),
-	cloudinary = require('cloudinary').v2,
-	nodeGeocoder = require('node-geocoder');
+	cloudinary = require('cloudinary').v2;
 
-const { isLoggedIn, checkCampgroundOwnership } = require('../middleware'); // if we require folder it requires automatically file named index.js
+const { isLoggedIn } = require('../middleware'); // if we require folder it requires automatically file named index.js
 
 // multer config
 const storage = multer.diskStorage({
@@ -34,15 +33,6 @@ cloudinary.config({
 	api_key: process.env.CLOUDINARY_API,
 	api_secret: process.env.CLOUDINARY_SECRET
 });
-
-// google maps geocoder config
-const options = {
-		provider: 'google',
-		httpAdapter: 'https',
-		apiKey: process.env.GEOCODER_API,
-		formatter: null
-	},
-	geocoder = nodeGeocoder(options);
 
 // INDEX - prikazi sve knjige
 router.get('/', (req, res) => {
@@ -96,6 +86,7 @@ router.get('/favorites/:id', isLoggedIn, async (req, res) => {
 		let bookId = req.params.id;
 		req.user.favorites.push(bookId);
 		await req.user.save();
+		req.flash('success', 'Uspješno ste dodali knjigu u favorite!');
 		res.redirect('back');
 	} catch (err) {
 		req.flash('error', 'Knjiga ne može biti dodana u favorite!');
@@ -114,14 +105,30 @@ router.delete('/favorites/:id', isLoggedIn, async (req, res) => {
 });
 
 // SHOW - informacije o pojedinačnim knjigama
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
 	//pronadji knjigu s tim ID-em
 	let bookId = req.params.id;
+	let reviews = await Review.find(
+		{ bookId }).sort({
+			"_id": -1
+		});
+	let average = calculateAvg(reviews);
 	fetch(`https://www.googleapis.com/books/v1/volumes/${bookId}`)
 		.then(res => res.json())
 		.then(book => {
-			res.render('books/show', { book, page: '' });
+			res.render('books/show', { book, page: '', reviews, average });
 		});
 });
+
+function calculateAvg(reviews) {
+	if (reviews.length === 0) {
+		return 0;
+	}
+	let sum = 0;
+	reviews.forEach(review => {
+		sum += review.stars;
+	});
+	return Math.round(((sum / reviews.length) + Number.EPSILON) * 100) / 100; //vrati prosjecnu ocjenu zaokruzenu na 2 decimale
+}
 
 module.exports = router;

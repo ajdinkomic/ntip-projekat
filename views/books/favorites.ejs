@@ -15,10 +15,33 @@
 </form>
 
 <main>
+	<% include ../partials/flashmessages %>
 	<!-- Informacije o knjigama -->
 	<section id="book-favorites" class="pt-5">
 		<div class="container pt-5">
 			<div class="row">
+				<% if (!books || books.length <= 0){ %>
+					<div class="col-md-12 text-center pt-5">
+						<h1>Nemate favorita</h1>
+						<h5>Pretražite našu biblioteku i dodajte svoje omiljene knjige u favorite</h5>
+
+						<!-- Pretraga -->
+						<form action="/books" method="GET">
+							<div class="input-group m-auto">
+								<input type="text" class="form-control pl-3" name="search" placeholder="Pretraga..." aria-label="Pretraga"
+									aria-describedby="search-icon">
+								<div class="input-group-append">
+									<span class="input-group-text py-0 px-3" id="search-icon">
+										<button type="submit" class="btn p-0">
+											<i class="fas fa-search"></i>
+										</button>
+									</span>
+								</div>
+							</div>
+						</form>
+
+					</div>
+				<% } else{ %>
 				<% for (const book of books){ %>
 				<div class="col-md-6 col-xl-4 mb-4">
 					<div class="card">
@@ -35,7 +58,16 @@
 								<%= book.volumeInfo.title %>
 							</h5>
 
-							<% if(book.volumeInfo.averageRating) { %>
+							<% if(book.volumeInfo.authors) { %>
+							<p class="card-text">
+								<strong>Autor/i:</strong>
+								<br />
+								<% for(const author of book.volumeInfo.authors){ %>
+								<em><%= author %></em>
+								<br />
+								<% } %>
+							</p>
+							<% } %> <% if(book.volumeInfo.averageRating) { %>
 							<p class="card-text mt-3">
 								<strong>Google Books ocjena:</strong>
 								<br />
@@ -49,21 +81,12 @@
 								<em>(<%= book.volumeInfo.ratingsCount %>)</em>
 								<br />
 							</p>
-							<% } %> <% if(book.volumeInfo.authors) { %>
-							<p class="card-text">
-								<strong>Autor/i:</strong>
-								<br />
-								<% for(const author of book.volumeInfo.authors){ %>
-								<em><%= author %></em>
-								<br />
-								<% } %>
-							</p>
 							<% } %>
 
 							<!-- Linkovi -->
 							<a href="/books/<%= book.id %>" class="btn btn-block read-more-btn read-more-book-show-btn mt-5">Pročitaj više</a>
 							<form action="/books/favorites/<%= book.id %>?_method=DELETE" method="POST" class="d-inline">
-								<button type="submit" href="/books/favorites/<%= book.id %>" class="btn btn-block remove-from-favorites-btn mt-2">
+								<button type="submit" class="btn btn-block remove-from-favorites-btn mt-2">
 									<i class="fa-trash fas"></i>
 									Ukloni iz favorita
 								</button>
@@ -71,6 +94,7 @@
 						</div>
 					</div>
 				</div>
+				<% } %>
 				<% } %>
 			</div>
 		</div>

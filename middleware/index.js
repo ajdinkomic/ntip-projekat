@@ -1,5 +1,4 @@
-// const Campground = require("../models/campground"),
-//     Review = require("../models/review");
+  const Review = require("../models/review");
 
 module.exports = {
 	isLoggedIn: (req, res, next) => {
@@ -8,7 +7,7 @@ module.exports = {
 		}
 		req.flash('error', 'Morate biti prijavljeni!'); // we can add this before res.redirect or in the same line as res.render like: return res.render("register", {"error": err.message});
 		res.redirect('/login');
-	}
+	},
 
 	// checkCampgroundOwnership: (req, res, next) => {
 	//     Campground.findOne({
@@ -30,44 +29,41 @@ module.exports = {
 	//     });
 	// },
 
-	// checkReviewOwnership: (req, res, next) => {
-	//     Review.findById(req.params.review_id, (err, foundReview) => {
-	//         if (err || !foundReview) {
-	//             req.flash("error", "Review not found!");
-	//             res.redirect("back");
-	//         } else {
-	//             if (foundReview.author.id.equals(req.user._id) || req.user.isAdmin) {
-	//                 req.review = foundReview;
-	//                 next();
-	//             } else {
-	//                 req.flash("error", "You don't have permission!"); // we can add this before res.redirect or in the same line as res.render like: return res.render("register", {"error": err.message});
-	//                 res.redirect("back");
-	//             }
-	//         }
-	//     });
-	// },
+	checkReviewOwnership: (req, res, next) => {
+	    Review.findById(req.params.review_id, (err, foundReview) => {
+	        if (err || !foundReview) {
+	            req.flash("error", "Recenzija nije pronađena!");
+	            res.redirect("back");
+	        } else {
+	            if (foundReview.author.id.equals(req.user._id) || req.user.isAdmin) {
+	                req.review = foundReview;
+	                next();
+	            } else {
+									req.flash("error", "Nemate privilegije!"); 
+									res.redirect("back");
+	            }
+	        }
+	    });
+	},
 
-	// checkReviewExistence: (req, res, next) => {
-	//     Campground.findOne({
-	//         slug: req.params.slug
-	//     }).populate("reviews").exec((err, foundCampground) => {
-	//         if (err || !foundCampground) {
-	//             req.flash("error", "Campground not found!");
-	//             res.redirect("back");
-	//         } else {
-	//             // check if req.user._id exists in foundCampground.reviews
-	//             const foundUserReview = foundCampground.reviews.some(review => review.author.id.equals(req.user._id));
-	//             if (foundUserReview) {
-	//                 req.flash("error", "You already wrote a review!"); // we can add this before res.redirect or in the same line as res.render like: return res.render("register", {"error": err.message});
-	//                 return res.redirect(`/campgrounds/${foundCampground.slug}`);
-	//             }
-	//             if(foundCampground.author.id.equals(req.user._id)){
-	//                 req.flash("error", "You own this campground!"); // we can add this before res.redirect or in the same line as res.render like: return res.render("register", {"error": err.message});
-	//                 return res.redirect(`/campgrounds/${foundCampground.slug}`);
-	//             }
-	//             req.campground = foundCampground;
-	//             next();
-	//         }
-	//     });
-	// }
+	checkReviewExistence: async (req, res, next) => {
+		let bookId = req.params.id;
+		let foundReviews = await Review.find({bookId}, err=>{
+			if (err) {
+				req.flash("error", "Recenzija nije pronađena!");
+				res.redirect("back");
+			}
+		});
+		let foundUserReview = false;
+	  if(foundReviews && foundReviews.length > 0){
+			for(const foundReview of foundReviews){
+				foundReview.author.id.equals(req.user._id) ? foundUserReview=true : foundUserReview=false;
+			}
+	    if (foundUserReview) {
+	    	req.flash("error", "Već ste napisali jednu recenziju!");
+	      return res.redirect(`/books/${bookId}`);
+	    }
+		}
+		next();
+	}
 };

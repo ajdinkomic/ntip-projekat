@@ -1,7 +1,7 @@
 <% include ./partials/head %>
 
 <main>
-	<!-- Registracija - section -->
+	<!-- Uredi profil - section -->
 	<section class="registration-login-page-section">
 		<div class="container-fluid">
 			<div class="row justify-content-center align-items-center">
@@ -9,9 +9,9 @@
 					<div class="card px-lg-5 py-md-4">
 						<div class="card-body">
 							<h4 class="card-title text-center">
-								<strong>Registracija</strong>
+								<strong>Uredi profil</strong>
 							</h4>
-							<form action="/register" method="POST" enctype="multipart/form-data" class="mt-4 mt-md-5">
+							<form action="/users/<%= user.username %>/edit" method="POST" enctype="multipart/form-data" class="mt-4 mt-md-5">
 								<div class="input-group mb-3">
 									<div class="input-group-prepend">
 										<span class="input-group-text" id="username"><i class="fas fa-user"></i></span>
@@ -25,6 +25,7 @@
 										aria-describedby="username"
 										pattern="^[a-z0-9_-]{4,10}$"
 										title="Može sadržavati slova, brojeve i '_' ili '-'. Minimalna dužina: 4 znaka. Maksimalna dužina: 10 znakova."
+										value="<%= user.username %>"
 										required
 									/>
 								</div>
@@ -42,7 +43,6 @@
 										aria-describedby="password"
 										pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$"
 										title="Mora sadržavati barem jedno veliko slovo i jedno malo slovo bez kvačica, broj i specijalni znak. Minimalna dužina: 8 znakova."
-										required
 									/>
 								</div>
 
@@ -58,6 +58,7 @@
 										name="firstName"
 										pattern="[A-Ža-ž]{1,25}"
 										title="Može sadržavati velika i mala slova. Minimalna dužina: 1 znak. Maksimalna dužina: 25 znakova."
+										value="<%= user.firstName %>"
 										required
 									/>
 									<input
@@ -68,6 +69,7 @@
 										name="lastName"
 										pattern="[A-Ža-ž]{1,25}"
 										title="Može sadržavati velika i mala slova. Minimalna dužina: 1 znak. Maksimalna dužina: 25 znakova."
+										value="<%= user.lastName %>"
 										required
 									/>
 								</div>
@@ -84,6 +86,7 @@
 										title="E-mail adresa"
 										aria-label="Email"
 										aria-describedby="email"
+										value="<%= user.email %>"
 										required
 									/>
 								</div>
@@ -95,23 +98,8 @@
 									<input type="file" class="form-control" id="image" title="Profilna slika" aria-describedby="imageDesc" name="image" accept="image/*" />
 								</div>
 
-								<p class="mb-0"><em>Ukoliko imate administratorsku šifru unesite je u polje ispod:</em></p>
-								<div class="input-group">
-									<div class="input-group-prepend">
-										<span class="input-group-text" id="adminCode"><i class="fas fa-user-shield"></i></span>
-									</div>
-									<input
-										type="password"
-										name="adminCode"
-										class="form-control"
-										placeholder="Administratorska šifra"
-										aria-label="Administratorska šifra"
-										aria-describedby="adminCode"
-									/>
-								</div>
-
 								<div class="form-group mt-4 mt-md-5">
-									<button class="btn read-more-btn register-btn btn-block" type="submit">Registracija</button>
+									<button class="btn read-more-btn register-btn btn-block" type="submit">Uredi</button>
 								</div>
 							</form>
 						</div>

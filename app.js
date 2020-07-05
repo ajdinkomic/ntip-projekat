@@ -11,16 +11,19 @@ const express = require('express'),
 	LocalStrategy = require('passport-local'),
 	methodOverride = require('method-override'),
 	User = require('./models/user');
-// Campground = require("./models/campground");
 
 // Require routes
-const indexRoutes = require('./routes/index'); // auth routes
-const bookRoutes = require('./routes/books');
-// const campgroundRoutes = require("./routes/campgrounds");
-//     reviewRoutes = require("./routes/reviews"),
+const indexRoutes = require('./routes/index'),
+			bookRoutes = require('./routes/books'),
+    	reviewRoutes = require("./routes/reviews");
+const moment = require('moment');
 
 // FLASH MESSAGES - should come before passport
 app.use(flash());
+
+// MOMENT JS
+app.locals.moment = require("moment");
+moment.locale('hr');
 
 // PASSPORT CONFIG
 app.use(
@@ -35,34 +38,10 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
 // make our req.user or currentUser accessible on all routes and views
 app.use(async (req, res, next) => {
 	res.locals.currentUser = req.user;
-	if (req.user) {
-		try {
-			let user = await User.findById(req.user._id)
-				// .populate(
-				// 	'notifications',
-				// 	null,
-				// 	{
-				// 		isRead: false
-				// 	},
-				// 	null,
-				// 	{
-				// 		sort: {
-				// 			_id: -1
-				// 		}
-				// 	}
-				// )
-				.populate('favorites')
-				.exec();
-			// let favoriteCamps = await Campground.find({ _id: user.favorites });
-			// res.locals.unreadNotifications = user.notifications;
-			// res.locals.favoriteCamps = favoriteCamps;
-		} catch (err) {
-			console.log(err.message);
-		}
-	}
 	res.locals.errorMessage = req.flash('error');
 	res.locals.successMessage = req.flash('success');
 	next(); // IMPORTANT!!! it will stop without this
@@ -87,8 +66,7 @@ app.use(methodOverride('_method'));
 
 app.use('/', indexRoutes);
 app.use('/books', bookRoutes);
-// app.use("/campgrounds/:slug/reviews", reviewRoutes);
-// app.use("/campgrounds", campgroundRoutes);
+app.use("/books/:id/reviews", reviewRoutes);
 
 const port = process.env.PORT;
 const ip = process.env.IP;
