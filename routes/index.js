@@ -156,6 +156,7 @@ router.post('/users/:username/edit', isLoggedIn, checkUserPrivileges, upload.sin
 	user.username = req.body.username;
 	user.firstName = req.body.firstName;
 	user.lastName = req.body.lastName;
+	user.email = req.body.email;
 	user.save(err => {
 		if (err) {
 			req.flash('error', 'Profil ne može biti ažuriran!');
@@ -167,11 +168,12 @@ router.post('/users/:username/edit', isLoggedIn, checkUserPrivileges, upload.sin
 	});
 });
 
-// PROMIJENI SIFRU - forma
-router.get("/forgot", (req, res) => {
-    res.render("forgot");
-});
+// // PROMIJENI SIFRU - forma
+// router.get("/forgot", (req, res) => {
+// 	res.render("forgot");
+// });
 
+// // PROMIJENI SIFRU - logika
 // router.post("/forgot", (req, res, next) => {
 //     async.waterfall([
 //         done => {
@@ -185,7 +187,7 @@ router.get("/forgot", (req, res) => {
 //                 email: req.body.email
 //             }, (err, user) => {
 //                 if (err || !user) {
-//                     req.flash("error", "No account with that email address found.");
+//                     req.flash("error", "Nije pronađen korisnik s tom e-mail adresom!");
 //                     return res.redirect("/forgot");
 //                 }
 
@@ -215,11 +217,11 @@ router.get("/forgot", (req, res) => {
 //             const mailOptions = {
 //                 to: user.email,
 //                 from: "ajdin.komic12@gmail.com",
-//                 subject: "YelpCamp Password Reset Request",
-//                 text: `Dear ${user.firstName},\n\nYou are receiving this because you (or someone else) have requested the reset of the password for your account.\n\nPlease click on the following link, or paste this into your browser to complete the process:\n\nhttps://${req.headers.host}/reset/${token}\n\nIf you did not request this, please ignore this email and your password will remain unchanged.\n`
+//                 subject: "Online Biblioteka - Zahtjev za promjenu šifre",
+//                 text: `Pozdrav ${user.firstName},\n\nPrimate ovaj e-mail zato što ste zatražili promjenu šifre svog računa.\n\nMolimo kliknite na sljedeći link, ili kopirajte link u svoj web preglednik kako biste kompletirali proces:\n\nhttps://${req.headers.host}/reset/${token}\n\nUkoliko niste zatražili promjenu šifre, molimo ignorišite ovaj e-mail i vaša šifra će ostati nepromijenjena.\n\nHvala na povjerenju! Vaša NTIP Online Biblioteka.`
 //             };
 //             smtpTransport.sendMail(mailOptions, err => {
-//                 req.flash("success", `An e-mail has been sent to ${user.email} with further instructions.`);
+//                 req.flash("success", `E-mail je poslan na adresu: ${user.email} sa detaljnim uputama.`);
 //                 done(err, "done");
 //             });
 //         }
@@ -229,8 +231,9 @@ router.get("/forgot", (req, res) => {
 //     });
 // });
 
+// // TOKEN ZA PROMJENU SIFRE - get
 // router.get("/reset/:token", (req, res) => {
-//     // $gt means greater than
+//     // $gt je >=
 //     User.findOne({
 //         resetPasswordToken: req.params.token,
 //         resetPasswordExpires: {
@@ -238,7 +241,7 @@ router.get("/forgot", (req, res) => {
 //         }
 //     }, (err, user) => {
 //         if (err || !user) {
-//             req.flash("error", "Password reset token is invalid or has expired.");
+//             req.flash("error", "Token za promjenu šifre nije validan ili je istekao.");
 //             return res.redirect("/forgot");
 //         }
 //         res.render("reset", {
@@ -247,6 +250,7 @@ router.get("/forgot", (req, res) => {
 //     });
 // });
 
+// TOKEN ZA PROMJENU SIFRE - post
 // router.post("/reset/:token", (req, res) => {
 //     async.waterfall([
 //         done => {

@@ -106,7 +106,7 @@ router.delete('/favorites/:id', isLoggedIn, async (req, res) => {
 
 // SHOW - informacije o pojedinačnim knjigama
 router.get('/:id', async (req, res) => {
-	//pronadji knjigu s tim ID-em
+	//pronadji knjigu s tim ID-em 
 	let bookId = req.params.id;
 	let reviews = await Review.find(
 		{ bookId }).sort({
