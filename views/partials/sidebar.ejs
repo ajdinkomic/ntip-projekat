@@ -10,7 +10,9 @@
 			<img src="<%=currentUser.profileImage%>" alt="Profilna slika" class="profile-image" />
 			<% } else { %>
 			<i class="fas fa-user" class="profile-image"></i>
-			<% } %>
+			<% } if(currentUser.isAdmin){ %>
+				<sup><span class="badge badge-warning rounded-circle">fa-user-shield</span></sup>
+			<% }%>
 		</li>
 		<li class="mt-1 d-none d-md-block text-md-center">
 			<h6 class="profile-name"><%= currentUser.firstName + " " + currentUser.lastName %></h6>
