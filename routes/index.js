@@ -168,156 +168,156 @@ router.post('/users/:username/edit', isLoggedIn, checkUserPrivileges, upload.sin
 	});
 });
 
-// // PROMIJENI SIFRU - forma
-// router.get("/forgot", (req, res) => {
-// 	res.render("forgot");
-// });
+// PROMIJENI SIFRU - forma
+router.get("/forgot", (req, res) => {
+	res.render("forgot");
+});
 
-// // PROMIJENI SIFRU - logika
-// router.post("/forgot", (req, res, next) => {
-//     async.waterfall([
-//         done => {
-//             crypto.randomBytes(20, (err, buf) => {
-//                 const token = buf.toString("hex");
-//                 done(err, token);
-//             });
-//         },
-//         (token, done) => {
-//             User.findOne({
-//                 email: req.body.email
-//             }, (err, user) => {
-//                 if (err || !user) {
-//                     req.flash("error", "Nije pronađen korisnik s tom e-mail adresom!");
-//                     return res.redirect("/forgot");
-//                 }
+// PROMIJENI SIFRU - logika
+router.post("/forgot", (req, res, next) => {
+    async.waterfall([
+        done => {
+            crypto.randomBytes(20, (err, buf) => {
+                const token = buf.toString("hex");
+                done(err, token);
+            });
+        },
+        (token, done) => {
+            User.findOne({
+                email: req.body.email
+            }, (err, user) => {
+                if (err || !user) {
+                    req.flash("error", "Nije pronađen korisnik s tom e-mail adresom!");
+                    return res.redirect("/forgot");
+                }
 
-//                 user.resetPasswordToken = token;
-//                 user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+                user.resetPasswordToken = token;
+                user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
-//                 user.save(err => {
-//                     done(err, token, user);
-//                 });
-//             });
-//         },
-//         (token, user, done) => {
-//             let reject = true;
-//             if (process.env.REJECTUNAUTHORIZED && process.env.REJECTUNAUTHORIZED === "false") {
-//                 reject = false;
-//             }
-//             const smtpTransport = nodemailer.createTransport({
-//                 service: "Gmail",
-//                 auth: {
-//                     user: "ajdin.komic12@gmail.com",
-//                     pass: process.env.MAILPW
-//                 },
-//                 tls: {
-//                     rejectUnauthorized: reject
-//                 }
-//             });
-//             const mailOptions = {
-//                 to: user.email,
-//                 from: "ajdin.komic12@gmail.com",
-//                 subject: "Online Biblioteka - Zahtjev za promjenu šifre",
-//                 text: `Pozdrav ${user.firstName},\n\nPrimate ovaj e-mail zato što ste zatražili promjenu šifre svog računa.\n\nMolimo kliknite na sljedeći link, ili kopirajte link u svoj web preglednik kako biste kompletirali proces:\n\nhttps://${req.headers.host}/reset/${token}\n\nUkoliko niste zatražili promjenu šifre, molimo ignorišite ovaj e-mail i vaša šifra će ostati nepromijenjena.\n\nHvala na povjerenju! Vaša NTIP Online Biblioteka.`
-//             };
-//             smtpTransport.sendMail(mailOptions, err => {
-//                 req.flash("success", `E-mail je poslan na adresu: ${user.email} sa detaljnim uputama.`);
-//                 done(err, "done");
-//             });
-//         }
-//     ], err => {
-//         if (err) return next(err);
-//         res.redirect("/forgot");
-//     });
-// });
+                user.save(err => {
+                    done(err, token, user);
+                });
+            });
+        },
+        (token, user, done) => {
+            let reject = true;
+            if (process.env.REJECTUNAUTHORIZED && process.env.REJECTUNAUTHORIZED === "false") {
+                reject = false;
+            }
+            const smtpTransport = nodemailer.createTransport({
+                service: "Gmail",
+                auth: {
+                    user: "ajdin.komic12@gmail.com",
+                    pass: process.env.MAILPW
+                },
+                tls: {
+                    rejectUnauthorized: reject
+                }
+            });
+            const mailOptions = {
+                to: user.email,
+                from: "ajdin.komic12@gmail.com",
+                subject: "Online Biblioteka - Zahtjev za promjenu šifre",
+                text: `Pozdrav ${user.firstName},\n\nPrimate ovaj e-mail zato što ste zatražili promjenu šifre svog računa.\n\nMolimo kliknite na sljedeći link, ili kopirajte link u svoj web preglednik kako biste kompletirali proces:\n\nhttps://${req.headers.host}/reset/${token}\n\nUkoliko niste zatražili promjenu šifre, molimo ignorišite ovaj e-mail i vaša šifra će ostati nepromijenjena.\n\nHvala na povjerenju! Vaša NTIP Online Biblioteka.`
+            };
+            smtpTransport.sendMail(mailOptions, err => {
+                req.flash("success", `E-mail je poslan na adresu: ${user.email} sa detaljnim uputama.`);
+                done(err, "done");
+            });
+        }
+    ], err => {
+        if (err) return next(err);
+        res.redirect("/forgot");
+    });
+});
 
-// // TOKEN ZA PROMJENU SIFRE - get
-// router.get("/reset/:token", (req, res) => {
-//     // $gt je >=
-//     User.findOne({
-//         resetPasswordToken: req.params.token,
-//         resetPasswordExpires: {
-//             $gt: Date.now()
-//         }
-//     }, (err, user) => {
-//         if (err || !user) {
-//             req.flash("error", "Token za promjenu šifre nije validan ili je istekao.");
-//             return res.redirect("/forgot");
-//         }
-//         res.render("reset", {
-//             token: req.params.token
-//         });
-//     });
-// });
+// TOKEN ZA PROMJENU SIFRE - get
+router.get("/reset/:token", (req, res) => {
+    // $gt je >=
+    User.findOne({
+        resetPasswordToken: req.params.token,
+        resetPasswordExpires: {
+            $gt: Date.now()
+        }
+    }, (err, user) => {
+        if (err || !user) {
+            req.flash("error", "Token za promjenu šifre nije validan ili je istekao.");
+            return res.redirect("/forgot");
+        }
+        res.render("reset", {
+            token: req.params.token
+        });
+    });
+});
 
 // TOKEN ZA PROMJENU SIFRE - post
-// router.post("/reset/:token", (req, res) => {
-//     async.waterfall([
-//         done => {
-//             User.findOne({
-//                 resetPasswordToken: req.params.token,
-//                 resetPasswordExpires: {
-//                     $gt: Date.now()
-//                 }
-//             }, (err, user) => {
-//                 if (err || !user) {
-//                     req.flash("error", "Password reset token is invalid or has expired.");
-//                     return res.redirect("/forgot");
-//                 }
-//                 if (req.body.password === req.body.confirm) {
-//                     user.setPassword(req.body.password, err => {
-//                         user.resetPasswordToken = undefined;
-//                         user.resetPasswordExpires = undefined;
+router.post("/reset/:token", (req, res) => {
+    async.waterfall([
+        done => {
+            User.findOne({
+                resetPasswordToken: req.params.token,
+                resetPasswordExpires: {
+                    $gt: Date.now()
+                }
+            }, (err, user) => {
+                if (err || !user) {
+                    req.flash("error", "Token za promjenu šifre je istekao ili nije validan.");
+                    return res.redirect("/forgot");
+                }
+                if (req.body.password === req.body.confirm) {
+                    user.setPassword(req.body.password, err => {
+                        user.resetPasswordToken = undefined;
+                        user.resetPasswordExpires = undefined;
 
-//                         user.save(err => {
-//                             if (err) {
-//                                 req.flash("error", "User could not be saved to DB!");
-//                                 return res.redirect("back");
-//                             }
-//                             req.logIn(user, err => {
-//                                 done(err, user);
-//                             });
-//                         });
-//                     });
-//                 } else {
-//                     req.flash("error", "Passwords do not match!");
-//                     return res.redirect("back");
-//                 }
-//             });
-//         },
-//         (user, done) => {
-//             let reject = true;
-//             if (process.env.REJECTUNAUTHORIZED && process.env.REJECTUNAUTHORIZED === "false") {
-//                 reject = false;
-//             }
-//             const smtpTransport = nodemailer.createTransport({
-//                 service: "Gmail",
-//                 auth: {
-//                     user: "ajdin.komic12@gmail.com",
-//                     pass: process.env.MAILPW
-//                 },
-//                 tls: {
-//                     rejectUnauthorized: reject
-//                 }
-//             });
-//             const mailOptions = {
-//                 to: user.email,
-//                 from: "ajdin.komic12@gmail.com",
-//                 subject: "Your YelpCamp Password Has Been Changed",
-//                 text: `Hello, ${user.firstName}\n\nThis is a confirmation that the password for your account ${user.email} has just been changed.\n`
-//             };
-//             smtpTransport.sendMail(mailOptions, err => {
-//                 req.flash("success", "Your password has been successfully changed.");
-//                 done(err);
-//             });
-//         }
-//     ], err => {
-//         if (err) {
-//             req.flash("error", "Something went wrong!");
-//             return res.redirect("back");
-// }
-// res.redirect("/users");
-// });
-// });
+                        user.save(err => {
+                            if (err) {
+                                req.flash("error", "Nije moguće spremiti korisnika u bazu!");
+                                return res.redirect("back");
+                            }
+                            req.logIn(user, err => {
+                                done(err, user);
+                            });
+                        });
+                    });
+                } else {
+                    req.flash("error", "Šifre se ne poklapaju!");
+                    return res.redirect("back");
+                }
+            });
+        },
+        (user, done) => {
+            let reject = true;
+            if (process.env.REJECTUNAUTHORIZED && process.env.REJECTUNAUTHORIZED === "false") {
+                reject = false;
+            }
+            const smtpTransport = nodemailer.createTransport({
+                service: "Gmail", 
+                auth: {
+                    user: "ajdin.komic12@gmail.com",
+                    pass: process.env.MAILPW
+                },
+                tls: {
+                    rejectUnauthorized: reject
+                }
+            });
+            const mailOptions = {
+                to: user.email,
+                from: "ajdin.komic12@gmail.com",
+                subject: "Promijenili ste šifru",
+                text: `Pozdrav, ${user.firstName}\n\nOvo je potvrdni e-mail da je šifra za korisnički račun ${user.email} upravo promijenjena.\n`
+            };
+            smtpTransport.sendMail(mailOptions, err => {
+                req.flash("success", "Uspješno ste promijenili šifru.");
+                done(err);
+            });
+        }
+    ], err => {
+        if (err) {
+            req.flash("error", "Došlo je do greške!");
+            return res.redirect("back");
+}
+res.redirect("/");
+});
+});
 
 module.exports = router;
