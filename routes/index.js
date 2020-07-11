@@ -291,7 +291,7 @@ router.post("/reset/:token", (req, res) => {
                 reject = false;
             }
             const smtpTransport = nodemailer.createTransport({
-                service: "Gmail", 
+                service: "Gmail",
                 auth: {
                     user: "ajdin.komic12@gmail.com",
                     pass: process.env.MAILPW
