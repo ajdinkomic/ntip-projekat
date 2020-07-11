@@ -7,12 +7,10 @@
 		<% if(currentUser){ %>
 		<li class="mt-2 text-md-center">
 			<% if(currentUser.profileImage) { %>
-			<img src="<%=currentUser.profileImage%>" alt="Profilna slika" class="profile-image" />
+			<img src="<%=currentUser.profileImage%>" alt="Profilna slika" class="profile-image <% if(currentUser.isAdmin){ %> border border-warning <% } %>" />
 			<% } else { %>
-			<i class="fas fa-user" class="profile-image"></i>
-			<% } if(currentUser.isAdmin){ %>
-				<sup><span class="badge badge-warning rounded-circle"><i class="fas fa-user-shield"></i></span></sup>
-			<% }%>
+			<i class="fas fa-user" class="profile-image <% if(currentUser.isAdmin){ %> border border-warning <% } %>"></i>
+			<% } %>
 		</li>
 		<li class="mt-1 d-none d-md-block text-md-center">
 			<h6 class="profile-name"><%= currentUser.firstName + " " + currentUser.lastName %></h6>
